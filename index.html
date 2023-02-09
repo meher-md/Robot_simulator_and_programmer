@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Robot Arm Simulator</title>
+	</head>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+	<body>
+		<script src="node_modules/three/build/three.js"></script>
+
+    <canvas id="viewport"></canvas>
+    <canvas id="collisions"></canvas>
+    <canvas id="biem"></canvas>
+
+    <script src="primitives/light.js"></script>
+    <script src="primitives/box.js"></script>
+    <script>
+      let viewport = new CubeScene(0xff0808, "viewport"); // red
+      let collisions = new CubeScene(0x08ff08, "collisions"); // green
+      let biem = new CubeScene(0x0808ff, "biem"); // blue
+    </script>
+
+    <!-- layout setup -------------------------------------------------------------------------->
+    <canvas id="top-canvas"></canvas>
+    <button class="top">File</button>
+    <button class="top">Edit</button>
+    <button class="top">View</button>
+    <button class="top">History</button>
+    <button class="top">Test</button>
+
+    <canvas id="side-canvas"></canvas>
+    <button class="side" id="viewport_btn"><img src="images/modules/viewport.png" draggable="false"></button>
+    <button class="side" id="collisions_btn"><img src="images/modules/collisions.png"draggable="false"></button>
+    <button class="side" id="biem_btn"><img src="images/modules/biem.png"draggable="false"></button>
+
+    <script src="layout.js"></script>
+
+    <!-- window space setup -->
+    <script src="modules/window-manager.js"></script>
+    
+		<script src="main.js"></script>
+	</body>
+</html>
+

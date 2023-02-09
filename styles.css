@@ -1,0 +1,39 @@
+body {
+  margin: 0px;
+  background-color: rgb(41, 41, 41);
+}
+
+.side{
+  background-color: #414141;
+  border: none;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.side:hover{
+  background-color: #437a45;
+}
+
+.top{
+  background-color: #414141;
+  border: none;
+  text-align: center;
+  color: white;
+  position: relative;
+
+  padding: 1px 5px;
+}
+.top:hover{
+  background-color: #437a45;
+}
+
+.button_img{
+  display: none;
+  position: fixed;
+}
+
+canvas{
+  position: fixed;
+}
