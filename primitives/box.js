@@ -22,6 +22,7 @@ class CubeScene {
     this.camera.position.z = 5; // position the camera 5 units away along the z-axis
 
     this.rendering = false;
+		this.side=""
   }
 
   shown() {
