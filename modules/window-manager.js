@@ -92,7 +92,8 @@ function handleMovement(moveX, window) {
 }
 
 function handleTouchMovement(event, window) {
-  let movementX = event.targetTouches[0].clientX;
+  event.preventDefault();
+  let movementX = event.touches[0].clientX;
   handleMovement(movementX, window);
 }
 
