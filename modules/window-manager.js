@@ -1,3 +1,5 @@
+import {viewport, collisions, biem} from "/main.js";
+
 let border = button_constant * 0.25;
 let window_space_left = button_constant + border;
 let window_space_top = top_height + border;
@@ -38,15 +40,6 @@ function addMouseDownEventListener(button, window) {
       handleMouseMovement(event, window);
     };
     document.addEventListener("mousemove", mouseMoveHandler)
-  });
-  button.addEventListener("touchstart", function() {
-    isRecording = true;
-
-    button.style.cursor = "context-menu"
-    touchMoveHandler = function(event) {
-      handleTouchMovement(event, window);
-    };
-    document.addEventListener("mousemove", touchMoveHandler)
   });
 }
 
@@ -89,12 +82,6 @@ function handleMovement(moveX, window) {
       }
     }
   }
-}
-
-function handleTouchMovement(event, window) {
-  event.preventDefault();
-  let movementX = event.touches[0].clientX;
-  handleMovement(movementX, window);
 }
 
 function handleMouseMovement(event, window) {

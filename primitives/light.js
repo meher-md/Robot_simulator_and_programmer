@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 class Light{
   constructor(scene, color){ // Constructor for Light class, creates sphere and directional light with given color
     // Create sphere geometry and material with given color
@@ -25,3 +27,5 @@ class Light{
     this.light = new THREE.DirectionalLight( color );
   }
 }
+
+export {Light};

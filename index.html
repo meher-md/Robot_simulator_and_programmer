@@ -7,19 +7,23 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/png" href="images/favicon.png">
 	<body>
-		<script src="node_modules/three/build/three.js"></script>
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/"
+        }
+      }
+    </script>
 
     <canvas id="viewport"></canvas>
     <canvas id="collisions"></canvas>
     <canvas id="biem"></canvas>
 
-    <script src="primitives/light.js"></script>
-    <script src="primitives/box.js"></script>
-    <script>
-      let viewport = new CubeScene(0xff0808, "viewport"); // red
-      let collisions = new CubeScene(0x08ff08, "collisions"); // green
-      let biem = new CubeScene(0x0808ff, "biem"); // blue
-    </script>
+    <script type="module" src="primitives/light.js"></script>
+    <script type="module" src="primitives/box.js"></script>
 
     <!-- layout setup -------------------------------------------------------------------------->
     <canvas id="top-canvas"></canvas>
@@ -37,9 +41,8 @@
     <script src="layout.js"></script>
 
     <!-- window space setup -->
-    <script src="modules/window-manager.js"></script>
-    
-		<script src="main.js"></script>
+		<script type="module" src="main.js"></script>
+    <script type="module" src="modules/window-manager.js"></script>
 	</body>
 </html>
 
