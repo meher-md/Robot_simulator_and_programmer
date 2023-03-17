@@ -1,5 +1,7 @@
 import {Box} from "/primitives/box.js"
-let viewport = new Box(0xff0808, "viewport"); // red
+import {Viewport} from "/modules/viewport.js"
+
+let viewport = new Viewport("viewport"); // red 0xff0808
 let collisions = new Box(0x08ff08, "collisions"); // green
 let biem = new Box(0x0808ff, "biem"); // blue
 
