@@ -1,16 +1,12 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Light } from "/primitives/light.js";
+import { Window } from "/primitives/window.js";
 
-class CubeScene {
+class Box extends Window {
   // constructor to initialize the scene, camera, and renderer
   constructor(color, canvas) {
-    this.canvas = document.getElementById(canvas);
-
-    this.scene = new THREE.Scene(); // create a new 3D scene
-    this.camera = new THREE.PerspectiveCamera(75, 100 / 100, 0.1, 1000); // create a perspective camera
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas }); // create a WebGL renderer with the given canvas
-
+    super(canvas);
     const geometry = new THREE.BoxGeometry(1, 1, 1); // create a box geometry with size 1x1x1
     const material = new THREE.MeshStandardMaterial({ color: color }); // create a basic mesh material with given color
 
@@ -27,9 +23,6 @@ class CubeScene {
 
     this.camera.position.z = 5; // position the camera 5 units away along the z-axis
     this.controls.update();
-
-    this.rendering = false;
-		this.side=""
   }
 
   show() {
@@ -54,4 +47,4 @@ class CubeScene {
   }
 }
 
-export {CubeScene};
+export {Box};
