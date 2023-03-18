@@ -41,6 +41,14 @@ function addMouseDownEventListener(button, window) {
     };
     document.addEventListener("mousemove", mouseMoveHandler)
   });
+  button.addEventListener("touchstart", function() { 
+    isRecording = true; 
+    button.style.cursor = "context-menu" 
+    touchMoveHandler = function(event) { 
+      handleTouchMovement(event, window); 
+    }; 
+    document.addEventListener("touchmove", touchMoveHandler, {passive: false}) 
+  });
 }
 
 function handleMovement(moveX, window) {
@@ -88,53 +96,70 @@ function handleMouseMovement(event, window) {
   let movementX = event.clientX;
   handleMovement(movementX, window);
 }
+function handleTouchMovement(event, window) {
+  event.preventDefault();
+  let movementX = event.touches[0].clientX;
+  handleMovement(movementX, window);
+}
 
 document.addEventListener("mouseup", function() {
   if (isRecording) {
     document.removeEventListener("mousemove", mouseMoveHandler);
-    document.body.style.cursor = "default"
-    viewport_btn.style.cursor = "default"
-    collisions_btn.style.cursor = "default"
-    biem_btn.style.cursor = "default"
-
-    current_window.canvas.style.zIndex = 0;
-
-    if (side == "left") {
-      if (left != current_window) {
-        if (left != null)
-          left.hide();
-        left = current_window;
-
-        if (current_window == right)
-          right = null;
-      }
-    }
-    if (side == "right") {
-      if (right != current_window) {
-        if (right != null)
-          right.hide();
-        right = current_window;
-
-        if (current_window == left)
-          left = null;
-      }
-    }
-    if (left != null && right == null) {
-      changeWindowSize(left, ws_width - button_constant * 0.5, ws_height - button_constant * 0.5);
-      moveWindow(left, window_space_left, window_space_top);
-    }
-    if (right != null && left == null) {
-      changeWindowSize(right, ws_width - button_constant * 0.5, ws_height - button_constant * 0.5);
-      moveWindow(right, window_space_left, window_space_top);
-      left = right;
-      right = null;
-    }
-
-    side = "";
-    current_window = null;
-    isRecording = false;
+    endMouseorTouch();
   }
 });
+
+document.addEventListener("touchend", function() {
+  if (isRecording) {
+    document.removeEventListener("touchmove", touchMoveHandler);
+    endMouseorTouch();
+  }
+});
+
+function endMouseorTouch(){
+  document.body.style.cursor = "default"
+  viewport_btn.style.cursor = "default"
+  collisions_btn.style.cursor = "default"
+  biem_btn.style.cursor = "default"
+
+  current_window.canvas.style.zIndex = 0;
+
+  if (side == "left") {
+    if (left != current_window) {
+      if (left != null)
+        left.hide();
+      left = current_window;
+
+      if (current_window == right)
+        right = null;
+    }
+  }
+  if (side == "right") {
+    if (right != current_window) {
+      if (right != null)
+        right.hide();
+      right = current_window;
+
+      if (current_window == left)
+        left = null;
+    }
+  }
+  if (left != null && right == null) {
+    changeWindowSize(left, ws_width - button_constant * 0.5, ws_height - button_constant * 0.5);
+    moveWindow(left, window_space_left, window_space_top);
+  }
+  if (right != null && left == null) {
+    changeWindowSize(right, ws_width - button_constant * 0.5, ws_height - button_constant * 0.5);
+    moveWindow(right, window_space_left, window_space_top);
+    left = right;
+    right = null;
+  }
+
+  side = "";
+  current_window = null;
+  isRecording = false;
+}
+
 
 // MAIN ============================================================================================
 

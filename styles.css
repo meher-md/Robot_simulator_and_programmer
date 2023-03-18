@@ -38,4 +38,4 @@ canvas{
   position: fixed;
 }
 
-html { overflow-y: hidden; }
+html { overflow: hidden; }
