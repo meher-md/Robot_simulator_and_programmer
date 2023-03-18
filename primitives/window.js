@@ -7,7 +7,7 @@ class Window {
 
     this.scene = new THREE.Scene(); // create a new 3D scene
     this.camera = new THREE.PerspectiveCamera(75, 100 / 100, 0.1, 1000); // create a perspective camera
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas }); // create a WebGL renderer with the given canvas
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true }); // create a WebGL renderer with the given canvas
 
     this.rendering = false;
 		this.side=""

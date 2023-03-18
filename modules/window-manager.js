@@ -172,5 +172,9 @@ addMouseDownEventListener(collisions_btn, collisions);
 let biem_btn = document.getElementById("biem_btn"); // Get the biem button element
 addMouseDownEventListener(biem_btn, biem);
 
-// MOBILE ============================================================================================
 
+// opens viewport on start
+side = "left";
+current_window=viewport;
+current_window.show();
+endMouseorTouch();
