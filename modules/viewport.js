@@ -12,28 +12,33 @@ gui.closed = true;
 
 class Viewport extends Window{
   constructor(canvas, urdf){
-    super(canvas);
+    super(canvas); // Call the constructor of the parent class
 
+    // Add directional and ambient lights to the scene
     const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9 );
     this.scene.add(directionalLight);
-
     const ambientLight = new THREE.AmbientLight(0x888888);
     this.scene.add(ambientLight);
 
-    const helper = new THREE.GridHelper( 200, 40, 0xff8888, 0x333333);
+    // Add a grid helper to the scene
+    const helper = new THREE.GridHelper( 2, 4, 0x05a4ff, 0x333333);
     helper.scale.set(0.5,0.5,0.5);
     helper.receiveShadow = true; // Set receiveShadow to true
     this.scene.add(helper);
 
+    // Add orbit controls to the camera
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.3;
 
-    this.camera.position.z = 2; // position the camera 5 units away along the z-axis
-    this.camera.position.y = 1; // position the camera 5 units away along the z-axis
+    // Set the camera position and update the controls
+    this.camera.position.z = 2;
+    this.camera.position.y = 1;
     this.controls.update();
 
-    this.jointFolder = gui.addFolder(canvas);
+    this.jointFolder = gui.addFolder(canvas); // Add a folder to the dat.GUI panel
 
-    this.URDFImport(urdf);
+    // this.URDFImport(urdf);
     this.robot;
   }
 
@@ -58,16 +63,19 @@ class Viewport extends Window{
 
         if (joint._jointType != "fixed"){
           if (joint.axis.x!=0){
+            // joint.rotation.x = randFloat(-3.14, 3.14);
             jointFolder.add(joint.rotation, 'x',
-              -3.14, 3.14, 0.01
+            -3.14, 3.14, 0.01
             ).name(jointName);
           }
           if (joint.axis.y!=0){
+            // joint.rotation.y = randFloat(-3.14, 3.14);
             jointFolder.add(joint.rotation, 'y',
             -3.14, 3.14, 0.01
             ).name(jointName);
           }
           if (joint.axis.z!=0){
+            // joint.rotation.z = randFloat(-3.14, 3.14);
             jointFolder.add(joint.rotation, 'z',
             -3.14, 3.14, 0.01
             ).name(jointName);
@@ -81,8 +89,8 @@ class Viewport extends Window{
 
   animate(){
     if (this.rendering) {
-      this.controls.update();
-      this.renderer.render(this.scene, this.camera); // render the scene with the camera
+      this.controls.update(); // Update the controls
+      this.renderer.render(this.scene, this.camera); // Render the scene with the camera
     }
   }
 }

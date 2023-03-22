@@ -4,7 +4,7 @@
 
   <!-- Colors -->
   <material name="Grey">
-    <color rgba="0.2 0.2 0.2 1.0"/>
+    <color rgba="0.3 0.3 0.3 1.0"/>
   </material>
   <material name="Orange">
     <color rgba="1.0 0.423529411765 0.0392156862745 1.0"/>
