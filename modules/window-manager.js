@@ -174,7 +174,7 @@ addMouseDownEventListener(biem_btn, biem);
 
 
 // opens viewport on start
-side = "left";
-current_window=viewport;
-current_window.show();
-endMouseorTouch();
+// side = "left";
+// current_window=viewport;
+// current_window.show();
+// endMouseorTouch();

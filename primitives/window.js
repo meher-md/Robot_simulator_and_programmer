@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 class Window {
   // Constructor to initialize the scene, camera, and renderer
-  constructor(canvas) {
+  constructor(canvas) { // canvas: canvasName
     this.canvas = document.getElementById(canvas);
 
     this.scene = new THREE.Scene(); // Create a new 3D scene

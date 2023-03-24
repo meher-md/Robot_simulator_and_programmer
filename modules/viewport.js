@@ -7,7 +7,8 @@ import { LoadingManager } from "three";
 import URDFLoader  from "urdf-loader";
 import * as dat from "dat.gui";
 
-let gui = new dat.GUI();
+let gui = new dat.GUI({autoPlace: false});
+document.querySelector('.gui').appendChild(gui.domElement);
 gui.closed = true;
 
 class Viewport extends Window{
@@ -36,12 +37,13 @@ class Viewport extends Window{
     this.camera.position.y = 1;
     this.controls.update();
 
-    this.jointFolder = gui.addFolder(canvas); // Add a folder to the dat.GUI panel
+    // this.jointFolder = gui.addFolder(canvas); // Add a folder to the dat.GUI panel
 
-    // this.URDFImport(urdf);
+    this.URDFImport(urdf);
     this.robot;
   }
 
+  // This function imports a URDF model, sets its rotation and allows users to control the rotation of its joints using a dat.GUI interface.
   URDFImport(urdf){
     const manager = new LoadingManager();
     const loader = new URDFLoader( manager );
@@ -52,30 +54,28 @@ class Viewport extends Window{
     );
     
     manager.onLoad = () => {
-      let jointFolder = this.jointFolder;
-      let robot = this.robot;
+      let jointFolder = gui;
 
-      robot.rotation.x = - Math.PI / 2
-      // robot.joints['arm_joint_2'].setJointValue(THREE.MathUtils.degToRad(30));
+      // rotates the robot so that it faces upwards
+      this.robot.rotation.x = - Math.PI / 2
 
-      for (const jointName in robot.joints){
-        const joint = robot.joints[jointName];
-
+      for (const jointName in this.robot.joints){
+        const joint = this.robot.joints[jointName];
+        
+        // The joint rotation controls are only added for non-fixed joints with a non-zero axis, 
+        // and the rotation limits are set to -3.14 to 3.14 with a step of 0.01.
         if (joint._jointType != "fixed"){
           if (joint.axis.x!=0){
-            // joint.rotation.x = randFloat(-3.14, 3.14);
             jointFolder.add(joint.rotation, 'x',
             -3.14, 3.14, 0.01
             ).name(jointName);
           }
           if (joint.axis.y!=0){
-            // joint.rotation.y = randFloat(-3.14, 3.14);
             jointFolder.add(joint.rotation, 'y',
             -3.14, 3.14, 0.01
             ).name(jointName);
           }
           if (joint.axis.z!=0){
-            // joint.rotation.z = randFloat(-3.14, 3.14);
             jointFolder.add(joint.rotation, 'z',
             -3.14, 3.14, 0.01
             ).name(jointName);
@@ -83,7 +83,8 @@ class Viewport extends Window{
         }
       }
       
-      this.scene.add(robot);
+      // adds the robot to the scene
+      this.scene.add(this.robot);
     }
   }
 

@@ -22,22 +22,44 @@
       }
     </script>
 
-    <canvas id="viewport"></canvas>
-    <canvas id="collisions"></canvas>
-    <canvas id="biem"></canvas>
+    <div class="window">
+      <canvas id="viewport"></canvas>
+    </div>
+    <div class="window">
+      <canvas id="collisions"></canvas>
+    </div>
+    <div class="window">
+      <canvas id="biem"></canvas>
+    </div>
 
     <script type="module" src="primitives/light.js"></script>
     <script type="module" src="primitives/box.js"></script>
 
     <script type="module" src="modules/viewport.js"></script>
 
-    <!-- layout setup -------------------------------------------------------------------------->
     <canvas id="top-canvas"></canvas>
-    <button class="top">File</button>
-    <button class="top">Edit</button>
-    <button class="top">View</button>
-    <button class="top">History</button>
-    <button class="top">Test</button>
+    <div class="dropdown">
+      <button onclick="dropDown('file')" class="top">File</button>
+      <div id="file" class="dropdown-content">
+        <button class="dropbtn">New</button>
+        <button class="dropbtn">Open</button>
+        <button class="dropbtn">Import</button>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button onclick="dropDown('edit')" class="top">Edit</button>
+      <div id="edit" class="dropdown-content">
+        <button class="dropbtn">Undo</button>
+        <button class="dropbtn">Redo</button>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button onclick="dropDown('view')" class="top">View</button>
+      <div id="view" class="dropdown-content">
+        <button class="dropbtn">Light Mode</button>
+        <button class="dropbtn">Dark Mode</button>
+      </div>
+    </div>
 
     <canvas id="side-canvas"></canvas>
     <button class="side" id="viewport_btn"><img src="images/modules/viewport.png" draggable="false"></button>
@@ -46,9 +68,10 @@
 
     <script src="layout.js"></script>
 
+    <div class="gui"></div>
+
     <!-- window space setup -->
 		<script type="module" src="main.js"></script>
     <script type="module" src="modules/window-manager.js"></script>
 	</body>
 </html>
-

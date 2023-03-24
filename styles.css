@@ -39,3 +39,37 @@ canvas{
 }
 
 html { overflow: hidden; }
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+/* The container <div> - needed to position the dropdown content */
+.dropbtn {
+  background-color: #414141;
+  border: none;
+  text-align: left;
+  color: white;
+
+  display: block;
+  min-width: 160px;
+}
+.dropbtn:hover {
+  background-color: #437a45;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #414141;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+.gui { position: absolute; top: 0px; right: 0px }

@@ -1,7 +1,10 @@
+import {Window} from "/primitives/window.js";
 import {Box} from "/primitives/box.js"
 import {Viewport} from "/modules/viewport.js"
 
 let viewport = new Viewport("viewport", 'urdf/URDF_models/kuka_iiwa.urdf'); // red 0xff0808
+// let collisions = new Window("collisions");
+// let biem = new Window("biem");
 // let collisions = new Box(0x08ff08, "collisions"); // green
 let collisions = new Viewport("collisions", 'urdf/URDF_models/SC_3DoF.urdf'); // green
 // let biem = new Box(0x0808ff, "biem"); // blue
