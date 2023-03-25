@@ -103,22 +103,20 @@ window.onclick = function(event) {
   }
 }
 
-function showImportFilesBox() {
+function showBox(id){
   let overlay = document.querySelector('#overlay');
   overlay.style.display = 'block';
   // Show the import files box
-  var importFilesBox = document.querySelector('.centered-box');
-  importFilesBox.style.display = 'block';
+  var box = document.querySelector(id);
+  box.style.display = 'block';
 }
-
-function hideImportFilesBox() {
+function hideBox(id){
   let overlay = document.querySelector('#overlay');
   overlay.style.display = 'none';
-  // Hide the import files box
-  var importFilesBox = document.querySelector('.centered-box');
-  importFilesBox.style.display = 'none';
+  // Show the import files box
+  var box = document.querySelector(id);
+  box.style.display = 'none';
 }
-
 
 function uploadFiles() {
   var form = document.getElementById("uploadForm");
@@ -148,9 +146,8 @@ function updateDirectoryListing() {
   xhr.open('GET', 'list_files.php', true);
   xhr.send();
 }
+updateDirectoryListing();
 
 window.addEventListener("resize", function() {
   layout();
 });
-
-updateDirectoryListing();

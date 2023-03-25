@@ -24,8 +24,8 @@
 
     <div id="overlay"></div>
 
-    <div class="centered-box">
-      <button class="import-close-button" onclick="hideImportFilesBox()">&times;</button>
+    <div class="centered-box" id="import-box">
+      <button class="import-close-button" onclick="hideBox('#import-box')">&times;</button>
       <h2>Import Files</h2>
       <form id="uploadForm" method="post" enctype="multipart/form-data">
         Select files to upload (.stl or .urdf):
@@ -36,6 +36,13 @@
         <input type="button" value="Upload Files" id="upload" onclick="uploadFiles()">
       </form><br>
       <h4>Uploaded Files:</h4>
+      <button class="refresh" onclick="updateDirectoryListing()">↻</button>
+      <div id="dirListingContainer" class="directory-listing"></div>
+    </div>
+    
+    <div class="centered-box" id="robot-box">
+      <button class="import-close-button" onclick="hideBox('#robot-box')">&times;</button>
+      <h2>Choose Robot</h2>
       <button class="refresh" onclick="updateDirectoryListing()">↻</button>
       <div id="dirListingContainer" class="directory-listing"></div>
     </div>
@@ -60,7 +67,8 @@
     <div class="dropdown">
       <button onclick="dropDown('file')" class="top">File</button>
       <div id="file" class="dropdown-content">
-        <button class="dropbtn" onclick="showImportFilesBox()">Import Files</button>
+        <button class="dropbtn" onclick="showBox('#robot-box')">Choose Robot</button>
+        <button class="dropbtn" onclick="showBox('#import-box')">Import Files</button>
         <button class="dropbtn">Open</button>
       </div>
     </div>

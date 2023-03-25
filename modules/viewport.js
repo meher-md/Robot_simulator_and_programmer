@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { randFloat } from "three/src/math/MathUtils";
 import { Light } from "/primitives/light.js";
 import { Window } from "/primitives/window.js";
@@ -47,6 +48,14 @@ class Viewport extends Window{
   URDFImport(urdf){
     const manager = new LoadingManager();
     const loader = new URDFLoader( manager );
+    const meshFolderPath = 'uploads/meshes/'; // Set the folder path here
+    loader.loadMeshCb = (path, manager, done) => {
+      const fileName = path.split('/').pop(); // Get the filename from the path
+      const fullPath = meshFolderPath + fileName; // Generate the full path using the standardized naming convention
+
+      // // Load the STL file using the STLLoader
+      loader.defaultMeshLoader(fullPath, manager, done)
+    };
     loader.load(urdf,
       result => {
         this.robot=result;
