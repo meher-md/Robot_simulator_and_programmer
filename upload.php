@@ -13,12 +13,6 @@ foreach ($_FILES["fileToUpload"]["name"] as $key => $name) {
     $uploadOk = 0;
   }
 
-  // Check file size
-  if ($_FILES["fileToUpload"]["size"][$key] > 500000) {
-    echo "Sorry, your file is too large.";
-    $uploadOk = 0;
-  }
-
   // Allow certain file formats
   $allowed_ext = array("stl", "urdf");
   $file_ext = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));

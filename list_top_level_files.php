@@ -1,5 +1,5 @@
 <?php
-function listFiles($dir, $level = 0) {
+function listTopLevelFiles($dir) {
   $output = '';
 
   // Get the contents of the directory
@@ -9,12 +9,15 @@ function listFiles($dir, $level = 0) {
   foreach ($files as $file) {
     // Ignore the . and .. entries
     if ($file != '.' && $file != '..') {
-      // If the current file is a directory, call the function recursively
+      // If the current file is a directory, add it to the output
       if (is_dir($dir . '/' . $file)) {
-        $output .= str_repeat('&nbsp;&nbsp;', $level) . $file . '/' . "<br>";
-        $output .= listFiles($dir . '/' . $file, $level + 1);
+
       } else {
-        $output .= '<button class="file" style="margin-left:' . ($level * 20) . 'px;" ><span style="margin-left: 10px;">' . $file . '</span></button><br>';
+        // Check if the file has a .urdf extension
+        $extension = pathinfo($file, PATHINFO_EXTENSION);
+        if ($extension == 'urdf') {
+          $output .= '<button class="file">' . $file . '</button><br>';
+        }
       }
     }
   }
@@ -23,7 +26,7 @@ function listFiles($dir, $level = 0) {
 }
 
 // Call the function with the root directory
-$dirListing = listFiles('./uploads/');
+$dirListing = listTopLevelFiles('./uploads/');
 
 // Return the directory listing as plain text
 echo $dirListing;

@@ -21,11 +21,4 @@ function animate() {
 // Calling the animate function to start the animation
 animate();
 
-document.getElementById('path-form').addEventListener('submit', function(event) {
-  event.preventDefault();
-  const inputField = document.getElementById('path-input');
-  let path = inputField.value;
-  viewport.URDFImport("uploads/"+path);
-});
-
 export {viewport, collisions, biem};

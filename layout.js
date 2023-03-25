@@ -108,15 +108,19 @@ window.onclick = function(event) {
 }
 
 function showBox(id){
-  let overlay = document.querySelector('#overlay');
-  overlay.style.display = 'block';
+  if (id=="#import-box"){
+    let overlay = document.querySelector('#overlay');
+    overlay.style.display = 'block';
+  }
   // Show the import files box
   var box = document.querySelector(id);
   box.style.display = 'block';
 }
 function hideBox(id){
-  let overlay = document.querySelector('#overlay');
-  overlay.style.display = 'none';
+  if (id=="#import-box"){
+    let overlay = document.querySelector('#overlay');
+    overlay.style.display = 'none';
+  }
   // Show the import files box
   var box = document.querySelector(id);
   box.style.display = 'none';
@@ -139,8 +143,21 @@ function uploadFiles() {
   xhr.send(formData);
 }
 
-function updateAllDirectoryListings() {
-  var dirListingContainers = document.querySelectorAll('.directory-listing');
+function updateImportDirectoryListing() {
+  var dirListingContainers = document.querySelectorAll('#importListingContainer');
+  dirListingContainers.forEach(function(dirListingContainer) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        dirListingContainer.innerHTML = this.responseText;
+      }
+    };
+    xhr.open('GET', 'list_files.php', true);
+    xhr.send();
+  });
+}
+function updateRobotDirectoryListing() {
+  var dirListingContainers = document.querySelectorAll('#robotListingContainer');
   dirListingContainers.forEach(function(dirListingContainer) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
@@ -155,14 +172,18 @@ function updateAllDirectoryListings() {
 
       }
     };
-    xhr.open('GET', 'list_files.php', true);
+    xhr.open('GET', 'list_top_level_files.php', true);
     xhr.send();
   });
+}
+function updateAllDirectoryListings(){
+  updateImportDirectoryListing();
+  updateRobotDirectoryListing();
 }
 updateAllDirectoryListings();
 
 
-//
+// add all button click events
 const importCloseButton = document.getElementById('importCloseButton');
 if (importCloseButton) {
   importCloseButton.addEventListener('click', function() {
@@ -179,12 +200,12 @@ if (robotCloseButton) {
 
 const importRefreshButton = document.getElementById('importRefreshButton');
 if (importRefreshButton) {
-  importRefreshButton.addEventListener('click', updateAllDirectoryListings);
+  importRefreshButton.addEventListener('click', updateImportDirectoryListing);
 }
 
 const robotRefreshButton = document.getElementById('robotRefreshButton');
 if (robotRefreshButton) {
-  robotRefreshButton.addEventListener('click', updateAllDirectoryListings);
+  robotRefreshButton.addEventListener('click', updateRobotDirectoryListing);
 }
 
 const uploadButton = document.getElementById('upload');

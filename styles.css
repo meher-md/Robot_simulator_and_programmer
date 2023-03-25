@@ -83,21 +83,26 @@ html { overflow: hidden; }
 
 .centered-box {
   position: fixed;
-  top: 50%;
+  top: 0px; /* set to a fixed value */
   left: 50%;
-  transform: translate(-50%, -50%);
   width: 400px;
   height: auto;
   background-color: #414141;
   padding: 20px;
   border-radius: 10px;
+  border-top: none;
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
   z-index: 100;
   display: none;
 
   color: white;
   font-family: monospace;
+  transform: translateX(-50%); /* add this property to center horizontally */
+  
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
+
 
 #overlay {
   position: fixed;
@@ -164,7 +169,7 @@ html { overflow: hidden; }
 }
 
 /* Style the upload button */
-#upload {
+/* #upload {
   background-color: #333;
   border: none;
   text-align: center;
@@ -176,15 +181,4 @@ html { overflow: hidden; }
 }
 #upload:hover{
   background-color: #437a45;
-}
-
-/* Style the file input */
-input[type="file"] {
-  /* background-color: #333; */
-  border: none;
-  text-align: center;
-  color: white;
-  position: relative;
-
-  font-family: monospace;
-}
+} */

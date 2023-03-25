@@ -23,7 +23,7 @@
     </script>
 
     <div id="overlay"></div>
-
+    
     <!-- HTML code with buttons -->
     <div class="centered-box" id="import-box">
       <button class="box-close-button" id="importCloseButton">&times;</button>
@@ -35,7 +35,7 @@
         <input type="file" name="fileToUpload[]" multiple>
         <br><br>
         <input type="button" value="Upload Files" id="upload">
-      </form><br>
+      </form>
       <h4>Uploaded Files:</h4>
       <button class="refresh" id="importRefreshButton">↻</button>
       <div id="importListingContainer" class="directory-listing"></div>
@@ -44,13 +44,9 @@
     <div class="centered-box" id="robot-box">
       <button class="box-close-button" id="robotCloseButton">&times;</button>
       <h2>Choose Robot</h2>
+      Click on a URDF file to load it into the viewport<br><br>
       <button class="refresh" id="robotRefreshButton">↻</button>
-      <div id="robotListingContainer" class="directory-listing"></div>
-      <form id="path-form">
-        <label for="path-input">Enter file path:</label>
-        <input type="text" id="path-input" name="path-input">
-        <button type="submit">Submit</button>
-      </form>
+      <div id="robotListingContainer" class="directory-listing"></div><br><br>
     </div>
 
     <div class="window">
