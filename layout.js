@@ -103,6 +103,54 @@ window.onclick = function(event) {
   }
 }
 
+function showImportFilesBox() {
+  let overlay = document.querySelector('#overlay');
+  overlay.style.display = 'block';
+  // Show the import files box
+  var importFilesBox = document.querySelector('.centered-box');
+  importFilesBox.style.display = 'block';
+}
+
+function hideImportFilesBox() {
+  let overlay = document.querySelector('#overlay');
+  overlay.style.display = 'none';
+  // Hide the import files box
+  var importFilesBox = document.querySelector('.centered-box');
+  importFilesBox.style.display = 'none';
+}
+
+
+function uploadFiles() {
+  var form = document.getElementById("uploadForm");
+  var formData = new FormData(form);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'upload.php', true);
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // Files uploaded successfully!
+      updateDirectoryListing();
+    } else {
+      alert('Something went wrong while uploading the files.');
+    }
+  };
+  xhr.send(formData);
+}
+
+function updateDirectoryListing() {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var dirListingContainer = document.getElementById('dirListingContainer');
+      dirListingContainer.innerHTML = this.responseText;
+    }
+  };
+  xhr.open('GET', 'list_files.php', true);
+  xhr.send();
+}
+
 window.addEventListener("resize", function() {
   layout();
 });
+
+updateDirectoryListing();

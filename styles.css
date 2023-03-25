@@ -24,6 +24,7 @@ body {
   position: relative;
 
   padding: 1px 5px;
+  font-family: monospace;
 }
 .top:hover{
   background-color: #437a45;
@@ -36,6 +37,10 @@ body {
 
 canvas{
   position: fixed;
+}
+
+.top-side{
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 html { overflow: hidden; }
@@ -54,6 +59,8 @@ html { overflow: hidden; }
 
   display: block;
   min-width: 160px;
+  padding: 10px 5px;
+  font-family: monospace;
 }
 .dropbtn:hover {
   background-color: #437a45;
@@ -73,3 +80,93 @@ html { overflow: hidden; }
 .show {display:block;}
 
 .gui { position: absolute; top: 0px; right: 0px }
+
+.centered-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: auto;
+  background-color: #414141;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+  z-index: 100;
+  display: none;
+
+  color: white;
+  font-family: monospace;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 30;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: none;
+}
+
+.import-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #414141;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  outline: none;
+  color: white;
+}
+.import-close-button:hover{
+  background-color: #437a45;
+}
+
+.refresh {
+  color: white;
+  outline: none;
+  font-size: 20px;
+  border: none;
+  background-color: #333;
+  float: right;
+  position: relative;
+  padding: 5px 10px;
+}
+.refresh:hover{
+  background-color: #437a45;
+}
+
+.directory-listing {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+}
+
+/* Style the upload button */
+#upload {
+  background-color: #333;
+  border: none;
+  text-align: center;
+  color: white;
+  position: relative;
+
+  padding: 5px 11px;
+  font-family: monospace;
+}
+#upload:hover{
+  background-color: #437a45;
+}
+
+/* Style the file input */
+input[type="file"] {
+  /* background-color: #333; */
+  border: none;
+  text-align: center;
+  color: white;
+  position: relative;
+
+  font-family: monospace;
+}

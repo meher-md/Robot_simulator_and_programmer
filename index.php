@@ -22,6 +22,25 @@
       }
     </script>
 
+    <div id="overlay"></div>
+
+    <div class="centered-box">
+      <button class="import-close-button" onclick="hideImportFilesBox()">&times;</button>
+      <h2>Import Files</h2>
+      <form id="uploadForm" method="post" enctype="multipart/form-data">
+        Select files to upload (.stl or .urdf):
+        <br>
+        <p></p>
+        <input type="file" name="fileToUpload[]" multiple>
+        <br><br>
+        <input type="button" value="Upload Files" id="upload" onclick="uploadFiles()">
+      </form><br>
+      <h4>Uploaded Files:</h4>
+      <button class="refresh" onclick="updateDirectoryListing()">↻</button>
+      <div id="dirListingContainer" class="directory-listing"></div>
+    </div>
+    
+
     <div class="window">
       <canvas id="viewport"></canvas>
     </div>
@@ -37,13 +56,12 @@
 
     <script type="module" src="modules/viewport.js"></script>
 
-    <canvas id="top-canvas"></canvas>
+    <canvas id="top-canvas" class="top-side"></canvas>
     <div class="dropdown">
       <button onclick="dropDown('file')" class="top">File</button>
       <div id="file" class="dropdown-content">
-        <button class="dropbtn">New Robot</button>
+        <button class="dropbtn" onclick="showImportFilesBox()">Import Files</button>
         <button class="dropbtn">Open</button>
-        <button class="dropbtn">Import</button>
       </div>
     </div>
     <div class="dropdown">
@@ -61,7 +79,7 @@
       </div>
     </div>
 
-    <canvas id="side-canvas"></canvas>
+    <canvas id="side-canvas" class="top-side"></canvas>
     <button class="side" id="viewport_btn"><img src="images/modules/viewport.png" draggable="false"></button>
     <button class="side" id="collisions_btn"><img src="images/modules/collisions.png"draggable="false"></button>
     <button class="side" id="biem_btn"><img src="images/modules/biem.png"draggable="false"></button>
