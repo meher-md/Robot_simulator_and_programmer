@@ -1,6 +1,5 @@
-import {Window} from "/primitives/window.js";
-import {Box} from "/primitives/box.js"
-import {Viewport} from "/modules/viewport.js"
+import {Window} from "../modules/window.js";
+import {Viewport} from "../modules/viewport.js"
 
 let viewport = new Viewport("viewport", null); // red 0xff0808
 let collisions = new Window("collisions");

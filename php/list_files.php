@@ -23,7 +23,7 @@ function listFiles($dir, $level = 0) {
 }
 
 // Call the function with the root directory
-$dirListing = listFiles('./uploads/');
+$dirListing = listFiles('../uploads/');
 
 // Return the directory listing as plain text
 echo $dirListing;

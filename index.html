@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -23,7 +24,7 @@
     </script>
 
     <div id="overlay"></div>
-    
+
     <!-- HTML code with buttons -->
     <div class="centered-box" id="import-box">
       <button class="box-close-button" id="importCloseButton">&times;</button>
@@ -59,8 +60,8 @@
       <canvas id="biem"></canvas>
     </div>
 
-    <script type="module" src="primitives/light.js"></script>
-    <script type="module" src="primitives/box.js"></script>
+    <script type="module" src="modules/light.js"></script>
+    <script type="module" src="modules/box.js"></script>
 
     <script type="module" src="modules/viewport.js"></script>
 
@@ -94,12 +95,12 @@
     <button class="side" id="collisions_btn"><img src="images/modules/collisions.png"draggable="false"></button>
     <button class="side" id="biem_btn"><img src="images/modules/biem.png"draggable="false"></button>
 
-    <script src="layout.js" type="module"></script>
+    <script src="src/layout.js" type="module"></script>
 
     <div class="gui"></div>
 
     <!-- window space setup -->
-		<script type="module" src="main.js"></script>
-    <script type="module" src="modules/window-manager.js"></script>
+		<script type="module" src="src/main.js"></script>
+    <script type="module" src="src/window-manager.js"></script>
 	</body>
 </html>

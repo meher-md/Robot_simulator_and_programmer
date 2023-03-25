@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { Light } from "/primitives/light.js";
-import { Window } from "/primitives/window.js";
+import { Light } from "/modules/light.js";
+import { Window } from "/modules/window.js";
 
 class Box extends Window {
   // constructor to initialize the scene, camera, and renderer

@@ -1,4 +1,4 @@
-import {viewport} from "/main.js"
+import {viewport} from "./main.js"
 var width, button_constant, top_height, ws_width, ws_height;
 
 function layout(){
@@ -131,7 +131,7 @@ function uploadFiles() {
   var formData = new FormData(form);
 
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'upload.php', true);
+  xhr.open('POST', 'php/upload.php', true);
   xhr.onload = function () {
     if (xhr.status === 200) {
       // Files uploaded successfully!
@@ -152,7 +152,7 @@ function updateImportDirectoryListing() {
         dirListingContainer.innerHTML = this.responseText;
       }
     };
-    xhr.open('GET', 'list_files.php', true);
+    xhr.open('GET', 'php/list_files.php', true);
     xhr.send();
   });
 }
@@ -172,7 +172,7 @@ function updateRobotDirectoryListing() {
 
       }
     };
-    xhr.open('GET', 'list_top_level_files.php', true);
+    xhr.open('GET', 'php/list_top_level_files.php', true);
     xhr.send();
   });
 }

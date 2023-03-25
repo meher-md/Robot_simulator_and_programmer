@@ -26,7 +26,7 @@ function listTopLevelFiles($dir) {
 }
 
 // Call the function with the root directory
-$dirListing = listTopLevelFiles('./uploads/');
+$dirListing = listTopLevelFiles('../uploads/');
 
 // Return the directory listing as plain text
 echo $dirListing;

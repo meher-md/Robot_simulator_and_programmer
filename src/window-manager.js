@@ -1,5 +1,5 @@
-import {viewport, collisions, biem} from "/main.js";
-import { button_constant, top_height, ws_width, ws_height } from "../layout.js";
+import {viewport, collisions, biem} from "./main.js";
+import { button_constant, top_height, ws_width, ws_height } from "./layout.js";
 
 let border = button_constant * 0.25;
 let window_space_left = button_constant + border;
