@@ -2,7 +2,7 @@ import {Window} from "/primitives/window.js";
 import {Box} from "/primitives/box.js"
 import {Viewport} from "/modules/viewport.js"
 
-let viewport = new Viewport("viewport", 'uploads/robot.urdf'); // red 0xff0808
+let viewport = new Viewport("viewport", null); // red 0xff0808
 let collisions = new Window("collisions");
 let biem = new Window("biem");
 // let collisions = new Box(0x08ff08, "collisions"); // green
@@ -20,5 +20,12 @@ function animate() {
 }
 // Calling the animate function to start the animation
 animate();
+
+document.getElementById('path-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const inputField = document.getElementById('path-input');
+  let path = inputField.value;
+  viewport.URDFImport("uploads/"+path);
+});
 
 export {viewport, collisions, biem};

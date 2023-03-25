@@ -1,3 +1,4 @@
+import {viewport} from "/main.js"
 var width, button_constant, top_height, ws_width, ws_height;
 
 function layout(){
@@ -83,6 +84,9 @@ function layout(){
 }
 
 layout();
+window.addEventListener("resize", function() {
+  layout();
+});
 
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
@@ -135,19 +139,82 @@ function uploadFiles() {
   xhr.send(formData);
 }
 
-function updateDirectoryListing() {
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var dirListingContainer = document.getElementById('dirListingContainer');
-      dirListingContainer.innerHTML = this.responseText;
-    }
-  };
-  xhr.open('GET', 'list_files.php', true);
-  xhr.send();
-}
-updateDirectoryListing();
+function updateAllDirectoryListings() {
+  var dirListingContainers = document.querySelectorAll('.directory-listing');
+  dirListingContainers.forEach(function(dirListingContainer) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        dirListingContainer.innerHTML = this.responseText;
+        var buttons = dirListingContainer.querySelectorAll('button');
+        buttons.forEach(function(button) {
+          button.addEventListener('click', function(event) {
+            viewport.URDFImport('uploads/'+button.textContent);
+          });
+        });
 
-window.addEventListener("resize", function() {
-  layout();
+      }
+    };
+    xhr.open('GET', 'list_files.php', true);
+    xhr.send();
+  });
+}
+updateAllDirectoryListings();
+
+
+//
+const importCloseButton = document.getElementById('importCloseButton');
+if (importCloseButton) {
+  importCloseButton.addEventListener('click', function() {
+    hideBox('#import-box');
+  });
+}
+
+const robotCloseButton = document.getElementById('robotCloseButton');
+if (robotCloseButton) {
+  robotCloseButton.addEventListener('click', function() {
+    hideBox('#robot-box');
+  });
+}
+
+const importRefreshButton = document.getElementById('importRefreshButton');
+if (importRefreshButton) {
+  importRefreshButton.addEventListener('click', updateAllDirectoryListings);
+}
+
+const robotRefreshButton = document.getElementById('robotRefreshButton');
+if (robotRefreshButton) {
+  robotRefreshButton.addEventListener('click', updateAllDirectoryListings);
+}
+
+const uploadButton = document.getElementById('upload');
+if (uploadButton) {
+  uploadButton.addEventListener('click', uploadFiles);
+}
+
+const chooseRobotBtn = document.getElementById('choose-robot-btn');
+chooseRobotBtn.addEventListener('click', function() {
+  showBox('#robot-box');
 });
+
+const importFilesBtn = document.getElementById('import-files-btn');
+importFilesBtn.addEventListener('click', function() {
+  showBox('#import-box');
+});
+
+const fileBtn = document.getElementById('file-btn');
+fileBtn.addEventListener('click', function() {
+  dropDown('file');
+});
+
+const editBtn = document.getElementById('edit-btn');
+editBtn.addEventListener('click', function() {
+  dropDown('edit');
+});
+
+const viewBtn = document.getElementById('view-btn');
+viewBtn.addEventListener('click', function() {
+  dropDown('view');
+});
+
+export {button_constant, top_height, ws_width, ws_height};

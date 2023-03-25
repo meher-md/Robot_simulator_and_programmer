@@ -40,7 +40,11 @@ class Viewport extends Window{
 
     // this.jointFolder = gui.addFolder(canvas); // Add a folder to the dat.GUI panel
 
-    this.URDFImport(urdf);
+    if (urdf!=null)
+      this.URDFImport(urdf);
+    else {
+      console.warn("no valid urdf given")
+    }
     this.robot;
   }
 
