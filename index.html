@@ -50,14 +50,19 @@
       <div id="robotListingContainer" class="directory-listing"></div><br><br>
     </div>
 
-    <div class="window">
-      <canvas id="viewport"></canvas>
+    <div id="viewport" class="window">
+      <canvas class="three-canvas"></canvas>
+      <div class="gui"id="viewport-gui"></div>
     </div>
-    <div class="window">
-      <canvas id="collisions"></canvas>
+    <div id="collisions" class="window">
+      <canvas class="three-canvas"></canvas>
     </div>
-    <div class="window">
-      <canvas id="biem"></canvas>
+    <div id="biem" class="window">
+      <!-- <input type="range" min="-1" max="1" step="0.1" value="0" id="heightSlider"> -->
+      <button id="plane-visibility">Hide Plane</button>
+      <button id="upload-to-viewport">Upload To Viewport</button>
+      <canvas class="three-canvas"></canvas>
+      <div class="gui"id="biem-gui"></div>
     </div>
 
     <script type="module" src="modules/light.js"></script>
@@ -96,8 +101,6 @@
     <button class="side" id="biem_btn"><img src="images/modules/biem.png"draggable="false"></button>
 
     <script src="src/layout.js" type="module"></script>
-
-    <div class="gui"></div>
 
     <!-- window space setup -->
 		<script type="module" src="src/main.js"></script>

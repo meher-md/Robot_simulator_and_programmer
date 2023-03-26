@@ -1,19 +1,17 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
-import { randFloat } from "three/src/math/MathUtils";
 import { Window } from "./window.js";
 import { LoadingManager } from "three";
 import URDFLoader  from "urdf-loader";
 import * as dat from "dat.gui";
 
 let gui = new dat.GUI({autoPlace: false});
-document.querySelector('.gui').appendChild(gui.domElement);
+document.querySelector('#viewport-gui').appendChild(gui.domElement);
 gui.closed = true;
 
 class Viewport extends Window{
-  constructor(canvas, urdf){
-    super(canvas); // Call the constructor of the parent class
+  constructor(window, urdf){
+    super(window); // Call the constructor of the parent class
 
     // Add directional and ambient lights to the scene
     const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9 );

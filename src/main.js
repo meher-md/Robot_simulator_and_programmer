@@ -1,9 +1,10 @@
 import {Window} from "../modules/window.js";
 import {Viewport} from "../modules/viewport.js"
+import {BIEM} from "../modules/biem.js"
 
 let viewport = new Viewport("viewport", null); // red 0xff0808
 let collisions = new Window("collisions");
-let biem = new Window("biem");
+let biem = new BIEM("biem");
 // let collisions = new Box(0x08ff08, "collisions"); // green
 // let collisions = new Viewport("collisions", 'urdf/URDF_models/SC_3DoF.urdf'); // green
 // let biem = new Box(0x0808ff, "biem"); // blue

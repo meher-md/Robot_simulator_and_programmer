@@ -35,13 +35,43 @@ body {
   position: fixed;
 }
 
-canvas{
-  position: fixed;
+.window {
+  position: absolute;
+}
+
+.gui { 
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+#heightSlider {
+  position: absolute;
+  top: 50%;
+  transform: rotate(270deg);
+  
+  border-radius: 5px;   
+  background: #d3d3d3;
+}
+
+#plane-visibility {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  left: 10px;
+}
+
+#upload-to-viewport {
+  position: absolute;
+  z-index: 1;
+  top: 40px;
+  left: 10px;
 }
 
 .top-side{
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
+
 
 html { overflow: hidden; }
 
@@ -78,8 +108,6 @@ html { overflow: hidden; }
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
-
-.gui { position: absolute; top: 0px; right: 0px }
 
 .centered-box {
   position: fixed;
