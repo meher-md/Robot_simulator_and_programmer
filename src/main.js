@@ -17,6 +17,7 @@ function animate() {
   collisions.animate();
   biem.animate();
 }
+
 // Calling the animate function to start the animation
 animate();
 
