@@ -10,7 +10,7 @@ document.querySelector('#biem-gui').appendChild(biem_gui.domElement);
 
 // Mouse selection
 
-var selected_plane;
+var selected_plane, position;
 
 function checkPlaneIntersections(plane_intersections){
   if (plane_intersections.length > 0) {
@@ -33,18 +33,22 @@ function checkPlaneIntersections(plane_intersections){
   }
 }
 
-function onMouseMove(event) {
+function onMouseMove(event){
   if (biem.helper.visible) {
     const intersections = getMouseIntersections(event, biem.plane);
     checkPlaneIntersections(intersections);
   }
   else if (!mouse_down){
     selected_plane = null;
+    let i = -1;
+    position = 0;
     biem.planes.forEach(function(rectangle){
+      i=i+1;
       const intersections = getMouseIntersections(event, rectangle);
       
       if (intersections.length>0){
         selected_plane = rectangle;
+        position = i;
       } else {
         rectangle.material.color.set(0xff5555);
       }
@@ -93,8 +97,8 @@ function onMouseDownAfterPlane(event){
   const extrusion_plane_intersections = getMouseIntersections(event, extrusion_plane);
   const extrusion_plane_mousePosition = extrusion_plane_intersections[0].point;
   const y_offset = extrusion_plane_mousePosition.y;
-  const boxGeometry = new THREE.BoxGeometry(selected_plane.geometry.parameters.width, y_offset, selected_plane.geometry.parameters.height);
-  const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+  const boxGeometry = new THREE.BoxGeometry(selected_plane.geometry.parameters.width, y_offset - selected_plane.position.y, selected_plane.geometry.parameters.height);
+  const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
 
   // Create a box mesh
   box = new THREE.Mesh(boxGeometry, boxMaterial);
@@ -104,7 +108,7 @@ function onMouseDownAfterPlane(event){
   biem.scene.add(box);
 }
 
-function onMouseMoveAfterPlaneMouseDown(event) {
+function onMouseMoveAfterPlaneMouseDown(event){
   const cameraPosition = new THREE.Vector3();
   biem.camera.getWorldPosition(cameraPosition);
   biem.extrusion_plane.lookAt(new THREE.Vector3(cameraPosition.x, biem.extrusion_plane.position.y, cameraPosition.z));
@@ -112,12 +116,10 @@ function onMouseMoveAfterPlaneMouseDown(event) {
   const extrusion_plane_intersections = getMouseIntersections(event, biem.extrusion_plane);
   const extrusion_plane_mousePosition = extrusion_plane_intersections[0].point;
   const y_offset = extrusion_plane_mousePosition.y;
-  console.log(y_offset);
-  const temp_box = boxes[boxes.length-1];
-  temp_box.geometry = new THREE.BoxGeometry(selected_plane.geometry.parameters.width, y_offset, selected_plane.geometry.parameters.height);
 
+  box.geometry = new THREE.BoxGeometry(selected_plane.geometry.parameters.width, y_offset - selected_plane.position.y, selected_plane.geometry.parameters.height);
   // Set the position of the box to the position of the plane
-  box.position.set(selected_plane.position.x, y_offset/2, selected_plane.position.z);
+  box.position.set(selected_plane.position.x, selected_plane.position.y+(y_offset - selected_plane.position.y)/2, selected_plane.position.z);
 }
 
 function onMouseUpAfterPlaneMouseDown(event){
@@ -127,16 +129,13 @@ function onMouseUpAfterPlaneMouseDown(event){
   document.removeEventListener('mouseup', onMouseUpAfterPlaneMouseDown);
   document.removeEventListener('mousemove', onMouseMoveAfterPlaneMouseDown);
 
-  const index = biem.planes.findIndex((element) => element === selected_plane);
-  if (index !== -1) {
-    biem.planes.splice(index, 1);
-  }
+  biem.scene.remove(selected_plane);
+  biem.planes.splice(position, 1);
 }
-
 
 // Mouse interactions with the environment
 
-function getMouseIntersections(event, intersectObject) {
+function getMouseIntersections(event, intersectObject){
   const rect = biem.canvas.getBoundingClientRect();
   const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -148,7 +147,7 @@ function getMouseIntersections(event, intersectObject) {
   return intersections;
 }
 
-function getMousePosition(event) {
+function getMousePosition(event){
   const rect = biem.canvas.getBoundingClientRect();
   const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -167,7 +166,7 @@ function getMousePosition(event) {
 
 let initialMousePosition
 
-function onMouseDown(event) {
+function onMouseDown(event){
     initialMousePosition = getMousePosition(event);
     document.addEventListener('mouseup', onMouseUpAfterMouseDown);
     document.addEventListener('mousemove', onMouseMoveAfterMouseDown);
@@ -201,7 +200,7 @@ function onMouseMoveAfterMouseDown(event){
   );
 }
 
-function onMouseUpAfterMouseDown(event) {
+function onMouseUpAfterMouseDown(event){
   const finalMousePosition = getMousePosition(event);
 
   const deltaX = finalMousePosition.x - initialMousePosition.x;
@@ -222,6 +221,12 @@ function onMouseUpAfterMouseDown(event) {
 class BIEM extends Window {
   constructor(window){
     super(window);
+
+    // Add directional and ambient lights to the scene
+    const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9 );
+    this.scene.add(directionalLight);
+    const ambientLight = new THREE.AmbientLight(0x888888);
+    this.scene.add(ambientLight);
 
     this.axesHelper = new THREE.AxesHelper( 5 );
     this.scene.add( this.axesHelper );
