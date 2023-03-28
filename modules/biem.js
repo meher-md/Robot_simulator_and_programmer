@@ -8,7 +8,7 @@ import * as dat from "dat.gui";
 let biem_gui = new dat.GUI({autoPlace: false});
 document.querySelector('#biem-gui').appendChild(biem_gui.domElement);
 
-// Mouse selection
+// Main mouse selection
 
 var selected_plane, position;
 
@@ -67,6 +67,8 @@ function onMouseMove(event){
     }
   }
 }
+
+// Extrusion
 
 var boxes = [];
 var mouse_down, box;
@@ -133,7 +135,7 @@ function onMouseUpAfterPlaneMouseDown(event){
   biem.planes.splice(position, 1);
 }
 
-// Mouse interactions with the environment
+// Frequently used functions
 
 function getMouseIntersections(event, intersectObject){
   const rect = biem.canvas.getBoundingClientRect();
