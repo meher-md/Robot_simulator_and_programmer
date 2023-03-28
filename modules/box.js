@@ -25,15 +25,6 @@ class Box extends Window {
     this.controls.update();
   }
 
-  show() {
-    this.rendering = true;
-    this.canvas.style.display = "block";
-  }
-  hide() {
-    this.rendering = false;
-    this.canvas.style.display = "none";
-  }
-
   // method to animate the scene
   animate() {
     if (this.rendering) {

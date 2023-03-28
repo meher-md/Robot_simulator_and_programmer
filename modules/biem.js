@@ -8,36 +8,84 @@ import * as dat from "dat.gui";
 let biem_gui = new dat.GUI({autoPlace: false});
 document.querySelector('#biem-gui').appendChild(biem_gui.domElement);
 
-function onMouseMove(event) {
-  if (biem.helper.visible) {
-    const intersections = getMouseIntersections(event, biem.plane);
+// Mouse selection
 
-    if (intersections.length > 0) {
-      biem.controls.enabled = false;
-      biem.sphere.visible = true;
-      biem.canvas.style.cursor = "none";
-      
-      const intersectionPoint = intersections[0].point;
-      biem.sphere.position.copy(intersectionPoint);
-      
-      document.addEventListener( 'mousedown', onMouseDown );
-    } else {
-      biem.controls.enabled = true;
-      biem.sphere.visible = false;
-      biem.canvas.style.cursor = "auto";
+function checkPlaneIntersections(plane_intersections){
+  if (plane_intersections.length > 0) {
+    biem.controls.enabled = false;
+    biem.sphere.visible = true;
+    biem.canvas.style.cursor = "none";
+    
+    const intersectionPoint = plane_intersections[0].point;
+    biem.sphere.position.copy(intersectionPoint);
+    
+    document.addEventListener( 'mousedown', onMouseDown );
+  } else {
+    biem.controls.enabled = true;
+    biem.sphere.visible = false;
+    biem.canvas.style.cursor = "auto";
 
-      document.removeEventListener('mousedown', onMouseDown );
-      document.removeEventListener('mouseup', onMouseUpAfterMouseDown);
-      document.removeEventListener('mousemove', onMouseMoveAfterMouseDown);
-    }
+    document.removeEventListener('mousedown', onMouseDown );
+    document.removeEventListener('mouseup', onMouseUpAfterMouseDown);
+    document.removeEventListener('mousemove', onMouseMoveAfterMouseDown);
   }
 }
 
-// function onMouseMove(event) {
-//   if (biem.helper.visible) {
-//     const intersections = getMouseIntersections(event);
-//   }
-// }
+function onMouseMove(event) {
+  if (biem.helper.visible) {
+    const intersections = getMouseIntersections(event, biem.plane);
+    checkPlaneIntersections(intersections);
+  }
+  else {
+    var plane;
+    biem.planes.forEach(function(rectangle){
+      const intersections = getMouseIntersections(event, rectangle);
+      
+      // console.log(intersections.length);
+
+      if (intersections.length>0){
+        rectangle.material.color.set(0x00ff00);
+        biem.controls.enabled = false;
+
+        document.addEventListener('mousedown', onMouseDownAfterPlane);
+      }
+      else{
+        rectangle.material.color.set(0xff5555);
+        biem.controls.enabled = true;
+
+        document.removeEventListener('mousedown', onMouseDownAfterPlane);
+        document.removeEventListener('mouseup', onMouseUpAfterPlaneMouseDown);
+        document.removeEventListener('mousemove', onMouseMoveAfterPlaneMouseDown);
+      }
+    });
+  }
+}
+
+function onMouseDownAfterPlane(event){
+  // document.addEventListener('mouseup', onMouseUpAfterPlaneMouseDown);
+  // document.addEventListener('mousemove', onMouseMoveAfterPlaneMouseDown);
+  const mousePosition = getMousePosition(event);
+  console.log("test");
+
+  // Create the line and set its position and rotation
+  const line = biem.line;
+  line.position.copy(mousePosition);
+
+  // Add the line to the scene
+  biem.scene.add(line);
+}
+
+function onMouseUpAfterPlaneMouseDown(event){
+  biem.scene.remove(biem.line);
+  // document.removeEventListener('mouseup', onMouseUpAfterPlaneMouseDown);
+  // document.removeEventListener('mousemove', onMouseMoveAfterPlaneMouseDown);
+}
+
+function onMouseMoveAfterPlaneMouseDown(event) {
+
+}
+
+// Mouse interactions with the environment
 
 function getMouseIntersections(event, intersectObject) {
   const rect = biem.canvas.getBoundingClientRect();
@@ -66,8 +114,9 @@ function getMousePosition(event) {
   }
 }
 
+// Drawing the rectangles onto the plane
+
 let initialMousePosition
-let planes = [];
 
 function onMouseDown(event) {
     initialMousePosition = getMousePosition(event);
@@ -85,8 +134,8 @@ function onMouseDown(event) {
     const newPlane = new THREE.Mesh(newPlaneGeometry, newPlaneMaterial);
     newPlane.rotation.set(-Math.PI / 2, 0, 0);
 
-    planes.push(newPlane);
-    biem.scene.add(planes[planes.length-1]);
+    biem.planes.push(newPlane);
+    biem.scene.add(biem.planes[biem.planes.length-1]);
 }
 
 function onMouseMoveAfterMouseDown(event){
@@ -94,7 +143,7 @@ function onMouseMoveAfterMouseDown(event){
   const deltaX = currentMousePosition.x - initialMousePosition.x;
   const deltaY = currentMousePosition.z - initialMousePosition.z;
 
-  const newPlane = planes[planes.length-1];
+  const newPlane = biem.planes[biem.planes.length-1];
   newPlane.geometry = new THREE.PlaneGeometry(Math.abs(deltaX), Math.abs(deltaY));
   newPlane.position.set(
     initialMousePosition.x + deltaX / 2,
@@ -106,19 +155,19 @@ function onMouseMoveAfterMouseDown(event){
 function onMouseUpAfterMouseDown(event) {
   const finalMousePosition = getMousePosition(event);
 
-    const deltaX = finalMousePosition.x - initialMousePosition.x;
-    const deltaY = finalMousePosition.z - initialMousePosition.z;
+  const deltaX = finalMousePosition.x - initialMousePosition.x;
+  const deltaY = finalMousePosition.z - initialMousePosition.z;
+  
+  const newPlane = biem.planes[biem.planes.length-1];
+  newPlane.geometry = new THREE.PlaneGeometry(Math.abs(deltaX), Math.abs(deltaY));
+  newPlane.position.set(
+    initialMousePosition.x + deltaX / 2,
+    biem.plane.position.y+0.00001,
+    initialMousePosition.z + deltaY / 2
+  );
     
-    const newPlane = planes[planes.length-1];
-    newPlane.geometry = new THREE.PlaneGeometry(Math.abs(deltaX), Math.abs(deltaY));
-    newPlane.position.set(
-      initialMousePosition.x + deltaX / 2,
-      biem.plane.position.y+0.00001,
-      initialMousePosition.z + deltaY / 2
-    );
-      
-    document.removeEventListener('mouseup', onMouseUpAfterMouseDown);
-    document.removeEventListener('mousemove', onMouseMoveAfterMouseDown);
+  document.removeEventListener('mouseup', onMouseUpAfterMouseDown);
+  document.removeEventListener('mousemove', onMouseMoveAfterMouseDown);
 }
 
 class BIEM extends Window {
@@ -141,7 +190,6 @@ class BIEM extends Window {
     
     this.scene.add( this.plane );
     
-    
     // Add a grid helper to the scene
     this.helper = new THREE.GridHelper( 1, 8, 0x333333, 0x333333);
     this.helper.receiveShadow = true; // Set receiveShadow to true
@@ -163,7 +211,18 @@ class BIEM extends Window {
     this.camera.position.y = 1;
     this.controls.update();
 
-    // this.slider = document.getElementById("heightSlider");
+    this.planes = [];
+
+   // Create a blue LineBasicMaterial
+    const lineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+    // Create a geometry for the line
+    const points = [];
+    points.push(new THREE.Vector3(0, -1000, 0)); // Start point
+    points.push(new THREE.Vector3(0, 1000, 0)); // End point
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+    // Create the line
+    this.line = new THREE.Line(lineGeometry, lineMaterial);
+
 
     document.addEventListener('mousemove', onMouseMove );
 
@@ -171,7 +230,6 @@ class BIEM extends Window {
     biem_gui.add(this.plane.position, "y", 0, 1, 0.01).onChange(() => {
       this.helper.position.y = this.plane.position.y;
     });
-
     biem_gui.add(this.plane.scale, "x", 1, 10, 0.1).name("Scale X").onChange(() => {
       this.helper.scale.x = this.plane.scale.x;
     });
@@ -180,19 +238,16 @@ class BIEM extends Window {
     });
 
     this.toggleButton = document.getElementById('plane-visibility');
-
-    // Add an event listener to the button
     this.toggleButton.addEventListener('click', () => {
       // Toggle the visibility property of the plane
-      this.helper.visible = !this.helper.visible;
       // Update the text content of the button to reflect the new state
+      this.helper.visible = !this.helper.visible;
       this.toggleButton.textContent = this.helper.visible ? 'Hide Plane' : 'Show Plane';
     });
 
     this.upload_button = document.getElementById('upload-to-viewport');
-
     this.upload_button.addEventListener('click', () => {
-      planes.forEach(function(plane) {
+        biem.planes.forEach(function(plane) {
         viewport.scene.add(plane);
       });
     });

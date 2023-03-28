@@ -1,6 +1,7 @@
 import {Window} from "../modules/window.js";
 import {Viewport} from "../modules/viewport.js"
 import {BIEM} from "../modules/biem.js"
+// import {Box} from "../modules/box.js"
 
 let viewport = new Viewport("viewport", null); // red 0xff0808
 let collisions = new Window("collisions");
