@@ -121,7 +121,6 @@ function handleMouseMove(event) {
 // Extrusion
 
 // Variables
-var boxes = [];
 var isMouseDown = false;
 var box;
 
@@ -159,13 +158,14 @@ function handleMouseDownOnPlane(event) {
   );
   const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
   box = new THREE.Mesh(boxGeometry, boxMaterial);
-  boxes.push(box);
+  biem.boxes.push(box);
 
   // Set box position and add it to the scene
   box.position.copy(selected_plane.position);
   biem.scene.add(box);
-}
 
+  biem.extrusion_plane.visible = true;
+}
 
 function handleMouseMoveDuringExtrusion(event) {
   const cameraPosition = new THREE.Vector3();
@@ -193,7 +193,6 @@ function onMouseUpAfterPlaneMouseDown(event) {
 
   // Remove line and extrusion plane
   biem.scene.remove(biem.line);
-  biem.scene.remove(biem.extrusion_plane);
 
   document.removeEventListener('mouseup', onMouseUpAfterPlaneMouseDown);
   document.removeEventListener('mousemove', handleMouseMoveDuringExtrusion);
@@ -201,6 +200,7 @@ function onMouseUpAfterPlaneMouseDown(event) {
   // Remove selected plane
   biem.scene.remove(selected_plane);
   biem.planes.splice(position, 1);
+  biem.extrusion_plane.visible=false;
 }
 
 // Drawing the rectangles onto the plane
@@ -276,6 +276,7 @@ class BIEM extends Window {
 
     // Initialize properties
     this.planes = [];
+    this.boxes = [];
 
     // Add GUI controls
     this.addGuiControls();
@@ -310,14 +311,24 @@ class BIEM extends Window {
     this.plane.visible = false;
     this.scene.add(this.plane);
   }
-
+  
   addExtrusionPlane() {
     // Create a plane geometry with a large constant value
     const planeGeometry = new THREE.PlaneGeometry(10000, 10000);
     // Create a plane material
-    const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x808080 });
+    const planeMaterial = new THREE.MeshBasicMaterial({ 
+      color: 0x808080,
+      transparent: true,
+      opacity: 0.5 
+    });
     // Create the plane and rotate it to be horizontal
     this.extrusion_plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    this.extrusion_plane.visible=false;
+    this.scene.add(this.extrusion_plane);
+  }
+
+  addLine() {
+    
   }
 
   addGridHelper() {
@@ -369,10 +380,9 @@ class BIEM extends Window {
 
     this.upload_button = document.getElementById('upload-to-viewport');
     this.upload_button.addEventListener('click', () => {
-      biem.planes.forEach(function(plane) {
-        viewport.scene.add(plane);
+      biem.boxes.forEach(function(temp_box) {
+        viewport.scene.add(temp_box.clone());
       });
-      biem.planes = [];
     });
 
     document.addEventListener('mousemove', handleMouseMove );

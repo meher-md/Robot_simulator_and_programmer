@@ -20,7 +20,7 @@ class Viewport extends Window{
     this.scene.add(ambientLight);
 
     // Add a grid helper to the scene
-    const helper = new THREE.GridHelper( 2, 4, 0x05a4ff, 0x333333);
+    const helper = new THREE.GridHelper( 16, 32, 0x05a4ff, 0x333333);
     helper.scale.set(0.5,0.5,0.5);
     helper.receiveShadow = true; // Set receiveShadow to true
     this.scene.add(helper);

@@ -8,7 +8,7 @@ class Window {
 
     this.scene = new THREE.Scene(); // Create a new 3D scene
     this.camera = new THREE.PerspectiveCamera(75, 100 / 100, 0.1, 1000); // Create a perspective camera
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true, logarithmicDepthBuffer:true }); // Create a WebGL renderer with the given canvas
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true}); // Create a WebGL renderer with the given canvas
 
     this.rendering = false; // Set the initial rendering state to false
 		this.side = ""; // Initialize the side property as an empty string
