@@ -1,10 +1,10 @@
-import {Window} from "../modules/window.js";
+import {Programmer} from "../modules/programmer.js";
 import {Viewport} from "../modules/viewport.js"
 import {BIEM} from "../modules/biem.js"
 // import {Box} from "../modules/box.js"
 
 let viewport = new Viewport("viewport", null); // red 0xff0808
-let collisions = new Window("collisions");
+let collisions = new Programmer("programmer");
 let biem = new BIEM("biem");
 // let collisions = new Box(0x08ff08, "collisions"); // green
 // let collisions = new Viewport("collisions", 'urdf/URDF_models/SC_3DoF.urdf'); // green

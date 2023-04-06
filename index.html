@@ -54,12 +54,20 @@
       <canvas class="three-canvas"></canvas>
       <div class="gui"id="viewport-gui"></div>
     </div>
-    <div id="collisions" class="window">
-      <canvas class="three-canvas"></canvas>
+    <div id="programmer" class="window">
+      <textarea id="textarea" spellcheck="false"></textarea>
+      <div>
+        <button class="programmer-button" id="save-button">Save</button>
+        <button class="programmer-button">Run</button>
+      </div><br>
+      <h1 style="color: white;">Loaded Code:</h1>
+      <div id="running-code"></div>
     </div>
     <div id="biem" class="window">
-      <button id="plane-visibility">Hide Plane</button>
-      <button id="upload-to-viewport">Upload To Viewport</button>
+      <div id="buttons">
+        <button id="upload-to-viewport" class="biem-button">Upload To Viewport</button>
+        <button id="plane-visibility" class="biem-button">Extrude</button>
+      </div>
       <canvas class="three-canvas"></canvas>
       <div class="gui"id="biem-gui"></div>
     </div>

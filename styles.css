@@ -54,18 +54,11 @@ body {
   background: #d3d3d3;
 }
 
-#plane-visibility {
+#buttons {
   position: absolute;
-  z-index: 1;
   top: 10px;
   left: 10px;
-}
-
-#upload-to-viewport {
-  position: absolute;
   z-index: 1;
-  top: 40px;
-  left: 10px;
 }
 
 .top-side{
@@ -196,17 +189,63 @@ html { overflow: hidden; }
   background-color: #437a45;
 }
 
-/* Style the upload button */
-/* #upload {
+#textarea {
   background-color: #333;
+  color: #fff;
+  border: 1px solid #414141;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 30px;
+  line-height: 1.5;
+  resize: none;
+  padding: 0px;
+}
+#textarea:focus {
+  outline: none;
+}
+
+#programmer div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.programmer-button {
+  margin-left: 10px;
+  background-color: #414141;
   border: none;
   text-align: center;
   color: white;
   position: relative;
 
-  padding: 5px 11px;
+  padding: 10px 20px;
+
   font-family: monospace;
 }
-#upload:hover{
+.programmer-button:hover{
   background-color: #437a45;
-} */
+}
+
+#running-code {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  font-size: 30px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.biem-button {
+  background-color: #333;
+  border: 2px solid #414141;
+  text-align: center;
+  color: white;
+  position: relative;
+
+  padding: 10px 20px;
+  font-family: monospace;
+}
+.biem-button:hover{
+  background-color: #437a45;
+}

@@ -2,13 +2,19 @@ import * as THREE from "three";
 import { Vector3 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { biem, viewport } from "../src/main.js";
-import {Window} from "./window.js"
+import {ThreeWindow} from "./window.js"
 import * as dat from "dat.gui";
 
 let biem_gui = new dat.GUI({autoPlace: false});
 document.querySelector('#biem-gui').appendChild(biem_gui.domElement);
 
+
 // Frequently used functions
+
+var palette = {
+  color: '#FF0000'
+};
+biem_gui.addColor(palette, "color");
 
 function getIntersectionsFromMouse(event, intersectObject) {
   const canvasRect = biem.canvas.getBoundingClientRect();
@@ -96,14 +102,23 @@ function handleMouseMove(event) {
         // If an intersection is found, set the selected_plane and position variables
         selected_plane = rectangle;
         position = i;
+
+        if (selected_plane.originalColor === undefined) {
+          selected_plane.originalColor = new THREE.Color(selected_plane.material.color.getHex());
+        }
       } else {
         // If no intersection, reset the color of the rectangle
-        rectangle.material.color.set(0xff5555);
+        // console.log(rectangle.originalColor);
+        rectangle.material.color.copy(rectangle.originalColor);
       }
     });
     if (selected_plane != null) {
       // If a rectangle is selected, highlight it and disable controls
-      selected_plane.material.color.set(0x00ff00);
+      if (selected_plane.originalColor === undefined) {
+        selected_plane.originalColor = new THREE.Color(selected_plane.material.color.getHex());
+      }
+      // console.log(selected_plane.originalColor);
+      selected_plane.material.color.set(0xffffff);
       biem.controls.enabled = false;
 
       // Add event listener for mouse down to start extrusion
@@ -148,15 +163,12 @@ function handleMouseDownOnPlane(event) {
   extrusionPlane.position.copy(mousePosition);
 
   // Create a box mesh
-  const extrusionPlaneIntersections = getIntersectionsFromMouse(event, extrusionPlane);
-  const extrusionPlaneMousePosition = extrusionPlaneIntersections[0].point;
-  const yOffset = extrusionPlaneMousePosition.y;
   const boxGeometry = new THREE.BoxGeometry(
     selected_plane.geometry.parameters.width, 
-    yOffset - selected_plane.position.y, 
+    0, 
     selected_plane.geometry.parameters.height
   );
-  const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+  const boxMaterial = new THREE.MeshStandardMaterial({ color: selected_plane.originalColor });
   box = new THREE.Mesh(boxGeometry, boxMaterial);
   biem.boxes.push(box);
 
@@ -168,22 +180,27 @@ function handleMouseDownOnPlane(event) {
 }
 
 function handleMouseMoveDuringExtrusion(event) {
-  const cameraPosition = new THREE.Vector3();
-  biem.camera.getWorldPosition(cameraPosition);
-  biem.extrusion_plane.lookAt(new THREE.Vector3(cameraPosition.x, biem.extrusion_plane.position.y, cameraPosition.z));
-  
-  // Get mouse position and set box geometry and position
+  // Get the current position of the camera
+  const currentCameraPosition = new THREE.Vector3();
+  biem.camera.getWorldPosition(currentCameraPosition);
+
+  // Look at the extrusion plane from the camera
+  biem.extrusion_plane.lookAt(new THREE.Vector3(currentCameraPosition.x, biem.extrusion_plane.position.y, currentCameraPosition.z));
+
+  // Get the mouse position and calculate the y-offset of the extrusion
   const extrusion_plane_intersections = getIntersectionsFromMouse(event, biem.extrusion_plane);
-  const extrusion_plane_mousePosition = extrusion_plane_intersections[0].point;
+  const extrusion_plane_mousePosition = (extrusion_plane_intersections.length > 0) ? extrusion_plane_intersections[0].point : new Vector3(0, 0, 0);
   const y_offset = extrusion_plane_mousePosition.y;
+
+  // Set the geometry and position of the box to create the extrusion
   box.geometry = new THREE.BoxGeometry(
-    selected_plane.geometry.parameters.width, 
-    y_offset - selected_plane.position.y, 
+    selected_plane.geometry.parameters.width,
+    y_offset - selected_plane.position.y,
     selected_plane.geometry.parameters.height
   );
   box.position.set(
-    selected_plane.position.x, 
-    selected_plane.position.y + (y_offset - selected_plane.position.y) / 2, 
+    selected_plane.position.x,
+    selected_plane.position.y + (y_offset - selected_plane.position.y) / 2,
     selected_plane.position.z
   );
 }
@@ -215,12 +232,13 @@ function onMouseDown(event) {
   // Create a new plane at the initial mouse position
   const planeGeometry = new THREE.PlaneGeometry(0, 0);
   const planeMaterial = new THREE.MeshBasicMaterial({
-    color: 0xff5555,
+    color: palette.color,
     transparent: true,
     opacity: 0.6,
     side: THREE.DoubleSide,
   });
   const newPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+  newPlane.originalColor = new THREE.Color(newPlane.material.color.getHex());
   newPlane.rotation.set(-Math.PI / 2, 0, 0);
 
   biem.planes.push(newPlane);
@@ -259,7 +277,7 @@ function onMouseUpAfterMouseDown(event) {
   document.removeEventListener('mousemove', onMouseMoveAfterMouseDown);
 }
 
-class BIEM extends Window {
+class BIEM extends ThreeWindow {
   constructor(window) {
     super(window);
 
@@ -309,6 +327,8 @@ class BIEM extends Window {
     this.plane = new THREE.Mesh(geometry, material);
     this.plane.rotation.set(-Math.PI/2, 0, 0);
     this.plane.visible = false;
+    this.plane.scale.x=2;
+    this.plane.scale.y=2;
     this.scene.add(this.plane);
   }
   
@@ -324,22 +344,24 @@ class BIEM extends Window {
     // Create the plane and rotate it to be horizontal
     this.extrusion_plane = new THREE.Mesh(planeGeometry, planeMaterial);
     this.extrusion_plane.visible=false;
-    this.scene.add(this.extrusion_plane);
+    // this.scene.add(this.extrusion_plane);
   }
-
+  
   addLine() {
     
   }
-
+  
   addGridHelper() {
     this.helper = new THREE.GridHelper(1, 8, 0x333333, 0x333333);
     this.helper.receiveShadow = true;
+    this.helper.scale.x=2;
+    this.helper.scale.z=2;
     this.scene.add(this.helper);
   }
 
   addSphere() {
     const sphereGeometry = new THREE.SphereGeometry(0.01, 32, 32);
-    const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
     this.sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     this.sphere.name = "sphere";
     this.scene.add(this.sphere);
@@ -360,11 +382,11 @@ class BIEM extends Window {
       this.helper.position.y = this.plane.position.y;
     });
 
-    biem_gui.add(this.plane.scale, "x", 1, 10, 0.1).name("Scale X").onChange(() => {
+    biem_gui.add(this.plane.scale, "x", 2, 10, 0.1).name("Scale X").onChange(() => {
       this.helper.scale.x = this.plane.scale.x;
     });
 
-    biem_gui.add(this.plane.scale, "y", 1, 10, 0.1).name("Scale Y").onChange(() => {
+    biem_gui.add(this.plane.scale, "y", 2, 10, 0.1).name("Scale Y").onChange(() => {
       this.helper.scale.z = this.plane.scale.y;
     });
   }
@@ -375,7 +397,7 @@ class BIEM extends Window {
       // Toggle the visibility property of the plane
       // Update the text content of the button to reflect the new state
       biem.helper.visible = !biem.helper.visible;
-      biem.toggleButton.textContent = biem.helper.visible ? 'Hide Plane' : 'Show Plane';
+      biem.toggleButton.textContent = biem.helper.visible ? 'Extrude' : 'Draw';
     });
 
     this.upload_button = document.getElementById('upload-to-viewport');

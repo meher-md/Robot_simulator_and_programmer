@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { Window } from "./window.js";
+import { ThreeWindow } from "./window.js";
 import { LoadingManager } from "three";
 import URDFLoader  from "urdf-loader";
 import * as dat from "dat.gui";
@@ -9,7 +9,7 @@ let gui = new dat.GUI({autoPlace: false});
 document.querySelector('#viewport-gui').appendChild(gui.domElement);
 gui.closed = true;
 
-class Viewport extends Window{
+class Viewport extends ThreeWindow{
   constructor(window, urdf){
     super(window); // Call the constructor of the parent class
 
