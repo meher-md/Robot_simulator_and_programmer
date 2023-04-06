@@ -1,6 +1,6 @@
 import {Window} from "./window.js"
 import { button_constant } from "../src/layout.js";
-import { programmer } from "../src/main.js";
+import { programmer, viewport } from "../src/main.js";
 
 class Programmer extends Window {
   constructor(window){
@@ -12,6 +12,8 @@ class Programmer extends Window {
     this.interpreter = document.getElementById('interpreter');
 
     this.padding = button_constant * 0.25;
+
+    this.movements = [];
   }
 
   changeWindowSize(width, height) {
@@ -39,27 +41,26 @@ class Programmer extends Window {
   }
 
   parse(){
-    // Split the text area content by line breaks
-    const lines = this.text_area.value.split('\n');
-
-    // Parse each line to create the joint movement objects
-    const jointMovements = lines.map(line => {
-      // Extract the time and joint movement instructions from the line
-      const regex = /move\((\d+)\)\s*{\s*((\"[a-zA-Z_]+\"\s*=\s*\[[\d\.\-,\s]+\];\s*)+)/g;
-      const match = regex.exec(line);
-      
-      // Parse the joint movement instructions into JointMovement objects
-      const instructions = match[2].split(';').filter(Boolean);
-      const jointMovements = instructions.map(instruction => {
-        const [jointName, positions] = instruction.split('=').map(str => str.trim());
-        const [position1, position2] = JSON.parse(positions);
-        return new JointMovement(jointName, position1, position2);
+    const text_area = document.getElementById('text-area');
+    const inputText = text_area.value;
+    
+    const regex = /move\((\d+)\)\s*\{((?:\s*"([\w_]+)"\s*=\s*\[([-.\d]+), ([-.\d]+)\];?\s*)+)\}/gm;
+    
+    let match;
+    this.movements = [];
+    while ((match = regex.exec(inputText)) !== null) {
+      const time = parseInt(match[1]);
+      const jointMovements = match[2].trim().split(';').filter((s) => s.trim().length > 0).map((jointStr) => {
+        // console.log(jointStr)
+        const regexJoint = /"([\w_]+)"\s*=\s*\[([-.\d]+), ([-.\d]+)\]/;
+        const jointMatches = regexJoint.exec(jointStr);
+        const jointName = jointMatches[1];
+        const position_1 = parseFloat(jointMatches[2]);
+        const position_2 = parseFloat(jointMatches[3]);
+        return new JointMovement(jointName, position_1, position_2);
       });
-      
-      // Create the JointMovement object for the line
-      const time = Number(match[1]);
-      return new Movement(time, jointMovements);
-    });
+      this.movements.push(new Movement(time, jointMovements));
+    }
   }
 }
 
@@ -75,13 +76,58 @@ class JointMovement {
     this.jointName = jointName;
     this.position_1 = position_1;
     this.position_2 = position_2;
+
+    this.current_position = 0;
   }
 }
 
 const load = document.getElementById("load");
 load.addEventListener("click", function(){
   programmer.parse();
+  console.log(programmer.movements);
 })
+
+const run = document.getElementById("run");
+run.addEventListener('click', function(){
+  interpolateMovements(programmer.movements);
+})
+
+function interpolateMovements(movements) {
+  // set the speed of the interpolation (in milliseconds per time step)
+  const speed = 10;
+
+  // set the total duration of the interpolation
+  const totalDuration = movements.reduce((acc, cur) => acc + cur.time, 0);
+
+  // iterate over each movement and joint movement, and perform linear interpolation in real-time
+  let currentTime = 0;
+  movements.forEach((movement) => {
+    const duration = movement.time;
+
+    movement.jointmovements.forEach((jointMovement) => {
+      const joint = new JointMovement(jointMovement.jointName, jointMovement.position_1, jointMovement.position_2);
+
+      const deltaPosition = jointMovement.position_2 - jointMovement.position_1;
+      const deltaT = duration;
+
+      const positionStep = deltaPosition / deltaT;
+
+      const interval = setInterval(() => {
+        const currentPosition = jointMovement.position_1 + positionStep * currentTime;
+        joint.current_position = currentPosition;
+
+        // console.log(`Joint: ${joint.jointName}, Current Position: ${joint.current_position}`);
+        viewport.robot.joints[joint.jointName].rotation.x = currentPosition;
+
+        currentTime += speed / 1000;
+
+        if (currentTime >= duration) {
+          clearInterval(interval);
+        }
+      }, speed);
+    });
+  });
+}
 
 document.addEventListener("keydown", function(e) {
   var textarea = document.getElementById("text-area");
