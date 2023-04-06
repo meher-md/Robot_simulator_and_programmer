@@ -1,4 +1,4 @@
-import {viewport, collisions, biem} from "./main.js";
+import {viewport, programmer, biem} from "./main.js";
 import { button_constant, top_height, ws_width, ws_height } from "./layout.js";
 
 let border = button_constant * 0.25;
@@ -104,7 +104,7 @@ document.addEventListener("touchend", function() {
 function endMouseorTouch(){
   document.body.style.cursor = "default"
   viewport_btn.style.cursor = "default"
-  collisions_btn.style.cursor = "default"
+  programmer_btn.style.cursor = "default"
   biem_btn.style.cursor = "default"
 
   current_window.window.style.zIndex = 0;
@@ -151,8 +151,8 @@ function endMouseorTouch(){
 let viewport_btn = document.getElementById("viewport_btn"); // Get the viewport button element
 addMouseDownEventListener(viewport_btn, viewport);
 
-let collisions_btn = document.getElementById("collisions_btn"); // Get the collisions button element
-addMouseDownEventListener(collisions_btn, collisions);
+let programmer_btn = document.getElementById("programmer_btn"); // Get the programmer button element
+addMouseDownEventListener(programmer_btn, programmer);
 
 let biem_btn = document.getElementById("biem_btn"); // Get the biem button element
 addMouseDownEventListener(biem_btn, biem);

@@ -1,0 +1,92 @@
+body {
+  margin: 0px;
+  background-color: rgb(41, 41, 41);
+}
+
+html { overflow: hidden; }
+
+/* Menu Bars */
+
+.side{
+  background-color: #414141;
+  border: none;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.side:hover{
+  background-color: #437a45;
+}
+
+.top{
+  background-color: #414141;
+  border: none;
+  text-align: center;
+  color: white;
+  position: relative;
+
+  padding: 1px 5px;
+  font-family: monospace;
+}
+.top:hover{
+  background-color: #437a45;
+}
+
+.button_img{
+  display: none;
+  position: fixed;
+}
+
+.menu-bar{
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+/* Dropdown Menus */
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+/* The container <div> - needed to position the dropdown content */
+.dropbtn {
+  background-color: #414141;
+  border: none;
+  text-align: left;
+  color: white;
+
+  display: block;
+  min-width: 160px;
+  padding: 10px 5px;
+  font-family: monospace;
+}
+.dropbtn:hover {
+  background-color: #437a45;
+}
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #414141;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+/* Miscellanious */
+
+.window {
+  position: absolute;
+  border: 1px solid #414141;
+}
+
+.gui { 
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}

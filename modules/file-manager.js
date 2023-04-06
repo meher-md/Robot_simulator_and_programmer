@@ -20,19 +20,15 @@ window.onclick = function(event) {
 }
 
 function showBox(id){
-  if (id=="#import-box"){
-    let overlay = document.querySelector('#overlay');
-    overlay.style.display = 'block';
-  }
+  let overlay = document.querySelector('#overlay');
+  overlay.style.display = 'block';
   // Show the import files box
   var box = document.querySelector(id);
   box.style.display = 'block';
 }
 function hideBox(id){
-  if (id=="#import-box"){
-    let overlay = document.querySelector('#overlay');
-    overlay.style.display = 'none';
-  }
+  let overlay = document.querySelector('#overlay');
+  overlay.style.display = 'none';
   // Show the import files box
   var box = document.querySelector(id);
   box.style.display = 'none';
@@ -91,8 +87,32 @@ function updateRobotDirectoryListing() {
 function updateAllDirectoryListings(){
   updateImportDirectoryListing();
   updateRobotDirectoryListing();
+  updateProgrammerDirectoryListing();
 }
+
+// calls all updates for directory listings
 updateAllDirectoryListings();
+
+// Programmer File Manager
+
+function updateProgrammerDirectoryListing() {
+  var dirListingContainers = document.querySelectorAll('#file-manager');
+  dirListingContainers.forEach(function(dirListingContainer) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        dirListingContainer.innerHTML = this.responseText;
+        var buttons = dirListingContainer.querySelectorAll('button');
+        buttons.forEach(function(button) {
+
+        });
+
+      }
+    };
+    xhr.open('GET', 'php/list_programs.php', true);
+    xhr.send();
+  });
+}
 
 
 // add all button click events

@@ -1,0 +1,92 @@
+/* File Manager */
+
+#file-manager {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #414141;
+
+  overflow: scroll;
+}
+.program {
+  background-color: #333;
+  border: none;
+  text-align: left;
+  color: white;
+
+  font-family: monospace;
+  font-size: large;
+  display: inline-block;
+  width: 100%;
+}
+.program:hover{
+  background-color: #437a45;
+}
+
+#filename-input {
+  margin-left: 10px;
+  background-color: #414141;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-family: monospace;
+  display: inline-block;
+}
+#filename-input:focus {
+  outline: none;
+}
+
+#button-bar {
+  display: inline-block;
+  position: absolute;
+}
+
+/* Text Input */
+
+#text-area {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #414141;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: medium;
+  line-height: 1.2;
+  resize: none;
+  padding: 0px;
+  position: absolute;
+  top: 0px;
+}
+#text-area:focus {
+  outline: none;
+}
+
+/* Buttons */
+
+.programmer-button {
+  margin-left: 10px;
+  background-color: #414141;
+  border: none;
+  text-align: center;
+  color: white;
+  padding: 10px 20px;
+  font-family: monospace;
+
+  display: inline-block;
+}
+.programmer-button:hover{
+  background-color: #437a45;
+}
+#load {
+  float: right;
+}
+#run {
+  float: right;
+}
+
+/* Interpreter */
+
+#interpreter {
+  background-color: #333;
+  color: white;
+  border: 1px solid #414141;
+
+  position: absolute;
+}
