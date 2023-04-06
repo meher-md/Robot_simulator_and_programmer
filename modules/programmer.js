@@ -117,7 +117,18 @@ function interpolateMovements(movements) {
         joint.current_position = currentPosition;
 
         // console.log(`Joint: ${joint.jointName}, Current Position: ${joint.current_position}`);
-        viewport.robot.joints[joint.jointName].rotation.x = currentPosition;
+        let robot_joint = viewport.robot.joints[joint.jointName];
+        if (robot_joint._jointType != "fixed"){
+          if (robot_joint.axis.x!=0){
+            robot_joint.rotation.x = currentPosition;
+          }
+          if (robot_joint.axis.y!=0){
+            robot_joint.rotation.y = currentPosition;
+          }
+          if (robot_joint.axis.z!=0){
+            robot_joint.rotation.z = currentPosition;
+          }
+        }
 
         currentTime += speed / 1000;
 
