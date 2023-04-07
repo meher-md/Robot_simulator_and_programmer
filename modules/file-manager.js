@@ -43,7 +43,7 @@ function uploadFiles() {
   xhr.onload = function () {
     if (xhr.status === 200) {
       // Files uploaded successfully!
-      updateDirectoryListing();
+      updateAllDirectoryListings();
     } else {
       alert('Something went wrong while uploading the files.');
     }

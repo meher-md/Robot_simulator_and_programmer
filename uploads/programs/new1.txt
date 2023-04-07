@@ -1,0 +1,16 @@
+<div id="programmer" class="window">
+  <div class="top-programmer">
+    <div id="file-manager"></div>
+    <form id="text-editor" method="post" action="upload_program.php" enctype="multipart/form-data">
+      <textarea id="text-area" name="content" spellcheck="false"></textarea>
+      <input type="hidden" id="filename-input" name="filename" value="">
+    </form>
+  </div>
+  <div id="button-bar">
+    <input type="text" id="filename" placeholder="Enter filename">
+    <button class="programmer-button" id="save">Save</button>
+    <button class="programmer-button" id="load">Load</button>
+    <button class="programmer-button" id="run">Run</button>
+  </div>
+  <div id="interpreter"></div>
+</div>

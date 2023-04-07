@@ -14,7 +14,7 @@ foreach ($_FILES["fileToUpload"]["name"] as $key => $name) {
   }
 
   // Allow certain file formats
-  $allowed_ext = array("stl", "urdf");
+  $allowed_ext = array("stl", "urdf", "txt");
   $file_ext = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
   if(!in_array($file_ext, $allowed_ext)){
     echo "Sorry, only STL and URDF files are allowed.";
@@ -28,6 +28,9 @@ foreach ($_FILES["fileToUpload"]["name"] as $key => $name) {
   } else {
     if ($file_ext == "stl") {
       $target_file = $target_dir . "meshes/" . basename($name);
+    }
+    if ($file_ext == "txt") {
+      $target_file = $target_dir . "programs/" . basename($name);
     }
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"][$key], $target_file)) {
       echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"][$key])). " has been uploaded.";

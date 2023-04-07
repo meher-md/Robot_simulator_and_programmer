@@ -172,7 +172,6 @@ class JointMovement {
 const load = document.getElementById("load");
 load.addEventListener("click", function(){
   programmer.parse();
-  console.log(programmer.movements);
 })
 
 const run = document.getElementById("run");
@@ -181,50 +180,23 @@ run.addEventListener('click', function(){
   programmer.startTime = performance.now();
 })
 
-// function interpolateMovements(movements) {
-//   // set the speed of the interpolation (in milliseconds per time step)
-//   const speed = 10;
+// Add event listener to the save button
+document.getElementById("save").addEventListener("click", function() {
+  // Get the filename from the input field
+  var filename = document.getElementById("filename-input").value;
+  // Get the contents of the text area
+  var content = document.getElementById("text-area").value;
+  console.log(content);
+  // Create a new XMLHttpRequest object
+  var xhr = new XMLHttpRequest();
+  // Set up the request
+  xhr.open("POST", "../php/upload_program.php", true);
+  // Set the content type
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  // Set the data to be sent
+  xhr.send("filename=" + encodeURIComponent(filename) + "&content=" + encodeURIComponent(content));
+});
 
-//   // iterate over each movement and joint movement, and perform linear interpolation in real-time
-//   let currentTime = 0;
-//   movements.forEach((movement) => {
-//     const duration = movement.time;
-
-//     movement.jointmovements.forEach((jointMovement) => {
-//       const joint = new JointMovement(jointMovement.jointName, jointMovement.position_1, jointMovement.position_2);
-
-//       const deltaPosition = jointMovement.position_2 - jointMovement.position_1;
-//       const deltaT = duration;
-
-//       const positionStep = deltaPosition / deltaT;
-
-//       const interval = setInterval(() => {
-//         const currentPosition = jointMovement.position_1 + positionStep * currentTime;
-//         joint.current_position = currentPosition;
-
-//         // console.log(`Joint: ${joint.jointName}, Current Position: ${joint.current_position}`);
-//         let robot_joint = viewport.robot.joints[joint.jointName];
-//         if (robot_joint._jointType != "fixed"){
-//           if (robot_joint.axis.x!=0){
-//             robot_joint.rotation.x = currentPosition;
-//           }
-//           if (robot_joint.axis.y!=0){
-//             robot_joint.rotation.y = currentPosition;
-//           }
-//           if (robot_joint.axis.z!=0){
-//             robot_joint.rotation.z = currentPosition;
-//           }
-//         }
-
-//         currentTime += speed / 1000;
-
-//         if (currentTime >= duration) {
-//           clearInterval(interval);
-//         }
-//       }, speed);
-//     });
-//   });
-// }
 
 document.addEventListener("keydown", function(e) {
   var textarea = document.getElementById("text-area");
