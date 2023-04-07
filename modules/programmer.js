@@ -1,6 +1,7 @@
 import {Window} from "./window.js"
 import { button_constant } from "../src/layout.js";
 import { programmer, viewport } from "../src/main.js";
+import {gui} from "./viewport.js"
 
 class Programmer extends Window {
   constructor(window){
@@ -190,20 +191,27 @@ class Programmer extends Window {
                 const timeRatio = this.timer / currentMovement.time;
                 const interpolatedPosition = jointMovement.position_1 + (deltaPosition * timeRatio);
                 jointMovement.current_position = interpolatedPosition;
-        
+              
                 let robot_joint = viewport.robot.joints[jointMovement.jointName];
-                if (robot_joint._jointType != "fixed"){
+                if (robot_joint._jointType != "fixed") {
                   if (robot_joint.axis.x!=0){
                     robot_joint.rotation.x = jointMovement.current_position;
+                    const xController = gui.__controllers.find(controller => controller.property === 'x' && controller.__li.textContent === jointMovement.jointName);
+                    xController.setValue(robot_joint.rotation.x);
                   }
                   if (robot_joint.axis.y!=0){
                     robot_joint.rotation.y = jointMovement.current_position;
+                    const yController = gui.__controllers.find(controller => controller.property === 'y' && controller.__li.textContent === jointMovement.jointName);
+                    yController.setValue(robot_joint.rotation.y);
                   }
                   if (robot_joint.axis.z!=0){
                     robot_joint.rotation.z = jointMovement.current_position;
+                    const zController = gui.__controllers.find(controller => controller.property === 'z' && controller.__li.textContent === jointMovement.jointName);
+                    zController.setValue(robot_joint.rotation.z);
                   }
                 }
               });
+              
             }
           } 
           if (this.code[this.currentMovementIndex] instanceof Wait){

@@ -283,7 +283,7 @@ class BIEM extends ThreeWindow {
 
     // Add lights and helpers to the scene
     this.addLights();
-    this.addAxesHelper();
+    // this.addAxesHelper();
     this.addPlane();
     this.addExtrusionPlane();
     this.addGridHelper();
@@ -352,7 +352,7 @@ class BIEM extends ThreeWindow {
   }
   
   addGridHelper() {
-    this.helper = new THREE.GridHelper(1, 8, 0x333333, 0x333333);
+    this.helper = new THREE.GridHelper(1, 8, 0x6ac36d, 0x333333);
     this.helper.receiveShadow = true;
     this.helper.scale.x=2;
     this.helper.scale.z=2;
