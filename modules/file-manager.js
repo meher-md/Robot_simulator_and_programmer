@@ -87,32 +87,10 @@ function updateRobotDirectoryListing() {
 function updateAllDirectoryListings(){
   updateImportDirectoryListing();
   updateRobotDirectoryListing();
-  updateProgrammerDirectoryListing();
 }
 
 // calls all updates for directory listings
 updateAllDirectoryListings();
-
-// Programmer File Manager
-
-function updateProgrammerDirectoryListing() {
-  var dirListingContainers = document.querySelectorAll('#file-manager');
-  dirListingContainers.forEach(function(dirListingContainer) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        dirListingContainer.innerHTML = this.responseText;
-        var buttons = dirListingContainer.querySelectorAll('button');
-        buttons.forEach(function(button) {
-
-        });
-
-      }
-    };
-    xhr.open('GET', 'php/list_programs.php', true);
-    xhr.send();
-  });
-}
 
 
 // add all button click events
