@@ -49,18 +49,19 @@ class Programmer extends Window {
     this.updateProgrammerDirectoryListing();
   }
 
-  parse(){
+  parse() {
     const text_area = document.getElementById('text-area');
     const inputText = text_area.value;
-    
+  
     const waitRegex = /wait\s*\(\s*(\d+)\s*\);/ig;
     const moveRegex = /move\s*\(\s*(\d+)\s*\)\s*\{([\s\S]+?)\}/igm;
-    const jointRegex = /"([\w_]+)"\s*=\s*\[([-.\d]+), ([-.\d]+)\];?/g;
-
+    const jointRegex = /"([\w_]+)"\s*=\s*\[([-.\d]+),?\s*([-.\d]+)?\];?/g;
+  
     this.code = [];
+    const latestJointPositions = {};
 
     const matches = [];
-
+  
     let match;
     while ((match = moveRegex.exec(inputText)) !== null) {
       matches.push({ type: 'move', match });
@@ -81,14 +82,32 @@ class Programmer extends Window {
       if (type === 'move') {
         const time = parseInt(match[1]);
         const jointMovements = [];
+    
         let jointMatch;
         while ((jointMatch = jointRegex.exec(match[2])) !== null) {
           const jointName = jointMatch[1];
-          const position_1 = parseFloat(jointMatch[2]);
-          const position_2 = parseFloat(jointMatch[3]);
-          jointMovements.push(new JointMovement(jointName, position_1, position_2));
+          let position1, position2;
+          if (jointMatch[3] === undefined){
+            position1 = null;
+            position2 = parseFloat(jointMatch[2]);
+          }
+          else {
+            position1 = parseFloat(jointMatch[2]);
+            position2 = parseFloat(jointMatch[3]);
+          }
+
+          if (position1 === null && latestJointPositions[jointName] !== undefined) {
+            // If the joint movement has only one position, set position1 to the previous position2
+            position1 = latestJointPositions[jointName].position_2;
+          }
+    
+          const jointMovement = new JointMovement(jointName, position1, position2);
+          jointMovements.push(jointMovement);
+          latestJointPositions[jointName] = jointMovement;
         }
-        this.code.push(new Movement(time, jointMovements));
+    
+        const movement = new Movement(time, jointMovements);
+        this.code.push(movement);
       }
     }
 
@@ -123,7 +142,7 @@ class Programmer extends Window {
       if (element instanceof Wait) {
         const wait = element;
         const wait_div = document.createElement('div');
-        wait_div.innerHTML = `<strong>Wait ${wait.time}ms</strong>`;
+        wait_div.innerHTML = `<br><strong>Wait ${wait.time}ms</strong><br><br>`;
         interpreter_div.appendChild(wait_div);
 
         // Add event listener to change background color when the movement is running
