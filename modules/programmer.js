@@ -299,6 +299,7 @@ document.getElementById("save").addEventListener("click", function() {
   programmer.updateProgrammerDirectoryListing();
 });
 
+// Editor
 
 document.addEventListener("keydown", function(e) {
   var textarea = document.getElementById("text-area");
