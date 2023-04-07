@@ -5,7 +5,10 @@
 		<meta charset="utf-8">
 		<title>Robot Arm Simulator</title>
 	</head>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles/interface-styles.css">
+  <link rel="stylesheet" href="styles/box-styles.css">
+  <link rel="stylesheet" href="styles/biem.css">
+  <link rel="stylesheet" href="styles/programmer.css">
   <link rel="icon" type="image/png" href="images/favicon.png">
 	<body>
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
@@ -22,6 +25,10 @@
         }
       }
     </script>
+    <!-- <script type="module" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.2/codemirror.js">
+      export {CodeMirror};un
+    </script> -->
+
 
     <div id="overlay"></div>
 
@@ -50,14 +57,39 @@
       <div id="robotListingContainer" class="directory-listing"></div><br><br>
     </div>
 
-    <div class="window">
-      <canvas id="viewport"></canvas>
+    <div id="viewport" class="window">
+      <canvas class="three-canvas"></canvas>
+      <div class="gui"id="viewport-gui"></div>
     </div>
-    <div class="window">
-      <canvas id="collisions"></canvas>
+    
+    <div id="programmer" class="window">
+      <div class="top-programmer">
+        <div id="file-manager"></div>
+        <div id="text-editor">
+          <textarea id="text-area" spellcheck="false"></textarea>
+        </div>
+      </div>
+      <div id="button-bar">
+        <input type="text" id="filename-input" placeholder="Enter filename">
+        <button class="programmer-button" id="save">Save</button>
+        <button class="programmer-button" id="load">Load</button>
+        <button class="programmer-button" id="run">Run</button>
+        <div id="run-feedback"></div>
+      </div>
+      <div id="interpreter"></div>
     </div>
-    <div class="window">
-      <canvas id="biem"></canvas>
+
+    <div id="biem" class="window">
+      <div id="biem-interface">
+        <button id="upload-to-viewport" class="biem-button">Upload To Viewport</button>
+        <button id="plane-visibility" class="biem-button">Extrude</button>
+      </div>
+      <canvas class="three-canvas"></canvas>
+      <div class="gui"id="biem-gui"></div>
+    </div>
+
+    <div id="collisions" class="window">
+      <canvas class="three-canvas"></canvas>
     </div>
 
     <script type="module" src="modules/light.js"></script>
@@ -65,7 +97,8 @@
 
     <script type="module" src="modules/viewport.js"></script>
 
-    <canvas id="top-canvas" class="top-side"></canvas>
+    <canvas id="top-canvas" class="menu-bar"></canvas>
+
     <div class="dropdown">
       <button id="file-btn" class="top">File</button>
       <div id="file" class="dropdown-content">
@@ -89,15 +122,14 @@
       </div>
     </div>
 
-
-    <canvas id="side-canvas" class="top-side"></canvas>
+    <canvas id="side-canvas" class="menu-bar"></canvas>
     <button class="side" id="viewport_btn"><img src="images/modules/viewport.png" draggable="false"></button>
-    <button class="side" id="collisions_btn"><img src="images/modules/collisions.png"draggable="false"></button>
     <button class="side" id="biem_btn"><img src="images/modules/biem.png"draggable="false"></button>
+    <button class="side" id="programmer_btn"><img src="images/modules/programmer.png"draggable="false"></button>
+    <button class="side" id="collisions_btn"><img src="images/modules/collisions.png"draggable="false"></button>
 
     <script src="src/layout.js" type="module"></script>
-
-    <div class="gui"></div>
+    <script src="modules/file-manager.js" type="module"></script>
 
     <!-- window space setup -->
 		<script type="module" src="src/main.js"></script>

@@ -1,11 +1,14 @@
-import {Window} from "../modules/window.js";
+import {Programmer} from "../modules/programmer.js";
 import {Viewport} from "../modules/viewport.js"
+import {BIEM} from "../modules/biem.js"
+import {Box} from "../modules/box.js"
 
 let viewport = new Viewport("viewport", null); // red 0xff0808
-let collisions = new Window("collisions");
-let biem = new Window("biem");
-// let collisions = new Box(0x08ff08, "collisions"); // green
-// let collisions = new Viewport("collisions", 'urdf/URDF_models/SC_3DoF.urdf'); // green
+let programmer = new Programmer("programmer");
+let biem = new BIEM("biem");
+let collisions = new Box(0x08ff08, "collisions");
+// let programmer = new Box(0x08ff08, "programmer"); // green
+// let programmer = new Viewport("programmer", 'urdf/URDF_models/SC_3DoF.urdf'); // green
 // let biem = new Box(0x0808ff, "biem"); // blue
 // let biem = new Viewport("biem", 'urdf/T12/urdf/arm.urdf'); // blue
 
@@ -14,10 +17,12 @@ function animate() {
 	requestAnimationFrame( animate );
 
   viewport.animate();
-  collisions.animate();
+  programmer.animate();
   biem.animate();
+  collisions.animate();
 }
+
 // Calling the animate function to start the animation
 animate();
 
-export {viewport, collisions, biem};
+export {viewport, programmer, biem, collisions};

@@ -1,19 +1,17 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
-import { randFloat } from "three/src/math/MathUtils";
-import { Window } from "./window.js";
+import { ThreeWindow } from "./window.js";
 import { LoadingManager } from "three";
 import URDFLoader  from "urdf-loader";
 import * as dat from "dat.gui";
 
 let gui = new dat.GUI({autoPlace: false});
-document.querySelector('.gui').appendChild(gui.domElement);
+document.querySelector('#viewport-gui').appendChild(gui.domElement);
 gui.closed = true;
 
-class Viewport extends Window{
-  constructor(canvas, urdf){
-    super(canvas); // Call the constructor of the parent class
+class Viewport extends ThreeWindow{
+  constructor(window, urdf){
+    super(window); // Call the constructor of the parent class
 
     // Add directional and ambient lights to the scene
     const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9 );
@@ -22,7 +20,7 @@ class Viewport extends Window{
     this.scene.add(ambientLight);
 
     // Add a grid helper to the scene
-    const helper = new THREE.GridHelper( 2, 4, 0x05a4ff, 0x333333);
+    const helper = new THREE.GridHelper( 16, 32, 0x6ac36d, 0x444444);
     helper.scale.set(0.5,0.5,0.5);
     helper.receiveShadow = true; // Set receiveShadow to true
     this.scene.add(helper);
@@ -45,6 +43,8 @@ class Viewport extends Window{
       console.warn("no valid urdf given")
     }
     this.robot;
+
+    this.jointControllers = [];
   }
 
   // This function imports a URDF model, sets its rotation and allows users to control the rotation of its joints using a dat.GUI interface.
@@ -73,24 +73,22 @@ class Viewport extends Window{
 
       for (const jointName in this.robot.joints){
         const joint = this.robot.joints[jointName];
-        
-        // The joint rotation controls are only added for non-fixed joints with a non-zero axis, 
-        // and the rotation limits are set to -3.14 to 3.14 with a step of 0.01.
+      
         if (joint._jointType != "fixed"){
           if (joint.axis.x!=0){
-            jointFolder.add(joint.rotation, 'x',
-            -3.14, 3.14, 0.01
-            ).name(jointName);
+            const xController = jointFolder.add(joint.rotation, 'x', -3.14, 3.14, 0.01);
+            xController.name(jointName);
+            this.jointControllers.push(xController); // add controller to array
           }
           if (joint.axis.y!=0){
-            jointFolder.add(joint.rotation, 'y',
-            -3.14, 3.14, 0.01
-            ).name(jointName);
+            const yController = jointFolder.add(joint.rotation, 'y', -3.14, 3.14, 0.01);
+            yController.name(jointName);
+            this.jointControllers.push(yController); // add controller to array
           }
           if (joint.axis.z!=0){
-            jointFolder.add(joint.rotation, 'z',
-            -3.14, 3.14, 0.01
-            ).name(jointName);
+            const zController = jointFolder.add(joint.rotation, 'z', -3.14, 3.14, 0.01);
+            zController.name(jointName);
+            this.jointControllers.push(zController); // add controller to array
           }
         }
       }
@@ -108,4 +106,4 @@ class Viewport extends Window{
   }
 }
 
-export { Viewport };
+export { Viewport, gui };

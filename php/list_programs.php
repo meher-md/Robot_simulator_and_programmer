@@ -1,6 +1,7 @@
 <?php
 function listFiles($dir, $level = 0) {
   $output = '';
+  // $output = '<h3 style="font-family: monospace; padding: 0px;">File Manager</h3>';
 
   // Get the contents of the directory
   $files = scandir($dir);
@@ -14,7 +15,9 @@ function listFiles($dir, $level = 0) {
         $output .= str_repeat('&nbsp;&nbsp;', $level) . $file . '/' . "<br>";
         $output .= listFiles($dir . '/' . $file, $level + 1);
       } else {
-        $output .= '<button class="file"><span style="margin-left: 10px;">' . $file . '</span></button><br>';
+        $file_contents = file_get_contents($dir . '/' . $file);
+        $output .= '<button class="program" data-filename="' . $file . '">' . $file . '</button><br>';
+        $output .= '<div class="program-contents" style="display: none;" data-filename="' . $file . '">' . htmlspecialchars($file_contents) . '</div>';
       }
     }
   }
@@ -23,7 +26,7 @@ function listFiles($dir, $level = 0) {
 }
 
 // Call the function with the root directory
-$dirListing = listFiles('../uploads/');
+$dirListing = listFiles('../uploads/programs');
 
 // Return the directory listing as plain text
 echo $dirListing;

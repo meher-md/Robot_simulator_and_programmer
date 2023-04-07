@@ -1,0 +1,81 @@
+move(500){
+"lbr_iiwa_joint_1" = [0, 1.57];
+}
+
+move(400){
+"lbr_iiwa_joint_2" = [-2.36, -2];
+}
+
+wait(500);
+
+move(800){
+"lbr_iiwa_joint_1" = [1.57, -1.57];
+"lbr_iiwa_joint_3" = [0, 1.57];
+}
+
+move(300){
+"lbr_iiwa_joint_2" = [-2, -2.36];
+"lbr_iiwa_joint_4" = [0, 1.57];
+}
+
+wait(1000);
+
+move(600){
+"lbr_iiwa_joint_1" = [-1.57, 1.57];
+"lbr_iiwa_joint_3" = [1.57, 0];
+"lbr_iiwa_joint_5" = [0, -1.57];
+}
+
+move(500){
+"lbr_iiwa_joint_2" = [-2.36, -2];
+"lbr_iiwa_joint_4" = [1.57, 0];
+"lbr_iiwa_joint_6" = [0, 1.57];
+}
+
+wait(800);
+
+move(400){
+"lbr_iiwa_joint_1" = [1.57, -1.57];
+"lbr_iiwa_joint_3" = [0, 1.57];
+"lbr_iiwa_joint_5" = [-1.57, 0];
+}
+
+move(600){
+"lbr_iiwa_joint_2" = [-2, -2.36];
+"lbr_iiwa_joint_4" = [0, 1.57];
+"lbr_iiwa_joint_6" = [1.57, 0];
+}
+
+wait(300);
+
+move(700){
+"lbr_iiwa_joint_1" = [-1.57, 1.57];
+"lbr_iiwa_joint_3" = [1.57, 0];
+"lbr_iiwa_joint_5" = [0, -1.57];
+}
+
+move(500){
+"lbr_iiwa_joint_2" = [-2.36, -2];
+"lbr_iiwa_joint_4" = [1.57, 0];
+"lbr_iiwa_joint_6" = [0, 1.57];
+}
+
+wait(500);
+
+move(800){
+"lbr_iiwa_joint_1" = [1.57, -1.57];
+"lbr_iiwa_joint_3" = [0, 1.57];
+}
+
+move(400){
+"lbr_iiwa_joint_2" = [-2, -3];
+"lbr_iiwa_joint_4" = [0, 1.57];
+}
+
+wait(1000);
+
+move(600){
+"lbr_iiwa_joint_1" = [-1.57, 1.57];
+"lbr_iiwa_joint_4" = [1.57, 0];
+"lbr_iiwa_joint_5" = [0, -1.57];
+}

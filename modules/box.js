@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { ThreeWindow } from "./window.js";
 import { Light } from "/modules/light.js";
-import { Window } from "/modules/window.js";
 
-class Box extends Window {
+class Box extends ThreeWindow {
   // constructor to initialize the scene, camera, and renderer
   constructor(color, canvas) {
     super(canvas);
@@ -23,15 +23,6 @@ class Box extends Window {
 
     this.camera.position.z = 5; // position the camera 5 units away along the z-axis
     this.controls.update();
-  }
-
-  show() {
-    this.rendering = true;
-    this.canvas.style.display = "block";
-  }
-  hide() {
-    this.rendering = false;
-    this.canvas.style.display = "none";
   }
 
   // method to animate the scene
