@@ -1,11 +1,12 @@
 import {Programmer} from "../modules/programmer.js";
 import {Viewport} from "../modules/viewport.js"
 import {BIEM} from "../modules/biem.js"
-// import {Box} from "../modules/box.js"
+import {Box} from "../modules/box.js"
 
 let viewport = new Viewport("viewport", null); // red 0xff0808
 let programmer = new Programmer("programmer");
 let biem = new BIEM("biem");
+let collisions = new Box(0x08ff08, "collisions");
 // let programmer = new Box(0x08ff08, "programmer"); // green
 // let programmer = new Viewport("programmer", 'urdf/URDF_models/SC_3DoF.urdf'); // green
 // let biem = new Box(0x0808ff, "biem"); // blue
@@ -18,9 +19,10 @@ function animate() {
   viewport.animate();
   programmer.animate();
   biem.animate();
+  collisions.animate();
 }
 
 // Calling the animate function to start the animation
 animate();
 
-export {viewport, programmer, biem};
+export {viewport, programmer, biem, collisions};

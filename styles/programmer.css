@@ -39,6 +39,15 @@
   display: inline-block;
   position: absolute;
 }
+#run-feedback {
+  color: white;
+  font-style: italic;
+  font-family: monospace;
+  float: right;
+  line-height: 1.2;
+  font-size: medium;
+  padding-top: 0.5%;
+}
 
 /* Text Input */
 

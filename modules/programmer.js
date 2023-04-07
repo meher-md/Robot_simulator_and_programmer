@@ -52,28 +52,42 @@ class Programmer extends Window {
     const text_area = document.getElementById('text-area');
     const inputText = text_area.value;
     
-    const regex = /(wait\s*\(\s*(\d+)\s*\);|move\s*\(\s*(\d+)\s*\)\s*\{((?:\s*"([\w_]+)"\s*=\s*\[([-.\d]+), ([-.\d]+)\];?\s*)+)\})/gm;
+    const waitRegex = /wait\s*\(\s*(\d+)\s*\);/ig;
+    const moveRegex = /move\s*\(\s*(\d+)\s*\)\s*\{([\s\S]+?)\}/igm;
+    const jointRegex = /"([\w_]+)"\s*=\s*\[([-.\d]+), ([-.\d]+)\];?/g;
+
+    this.code = [];
+
+    const matches = [];
 
     let match;
-    this.code = [];
-    while ((match = regex.exec(inputText)) !== null) {
-      if (match[1].startsWith("wait")) {
-        const time = parseInt(match[2]);
+    while ((match = moveRegex.exec(inputText)) !== null) {
+      matches.push({ type: 'move', match });
+    }
+
+    while ((match = waitRegex.exec(inputText)) !== null) {
+      matches.push({ type: 'wait', match });
+    }
+
+    matches.sort((a, b) => a.match.index - b.match.index);
+
+    for (let i = 0; i < matches.length; i++) {
+      const { type, match } = matches[i];
+      if (type === 'wait') {
+        const time = parseInt(match[1]);
         this.code.push(new Wait(time));
       } 
-      if (match[0].startsWith("move")) {
-        const time = parseInt(match[3]);
-        if (match[4]) { // check if match[3] is defined
-          const jointMovements = match[4].trim().split(';').filter((s) => s.trim().length > 0).map((jointStr) => {
-            const regexJoint = /"([\w_]+)"\s*=\s*\[([-.\d]+), ([-.\d]+)\]/;
-            const jointMatches = regexJoint.exec(jointStr);
-            const jointName = jointMatches[1];
-            const position_1 = parseFloat(jointMatches[2]);
-            const position_2 = parseFloat(jointMatches[3]);
-            return new JointMovement(jointName, position_1, position_2);
-          });
-          this.code.push(new Movement(time, jointMovements));
+      if (type === 'move') {
+        const time = parseInt(match[1]);
+        const jointMovements = [];
+        let jointMatch;
+        while ((jointMatch = jointRegex.exec(match[2])) !== null) {
+          const jointName = jointMatch[1];
+          const position_1 = parseFloat(jointMatch[2]);
+          const position_2 = parseFloat(jointMatch[3]);
+          jointMovements.push(new JointMovement(jointName, position_1, position_2));
         }
+        this.code.push(new Movement(time, jointMovements));
       }
     }
 
@@ -88,7 +102,7 @@ class Programmer extends Window {
       if (element instanceof Movement){ // checks if the code element is a movement 
         const movement = element;
         const movement_div = document.createElement('div');
-        movement_div.innerHTML = `<strong>Move ${index + 1} (${movement.time}s)</strong>`;
+        movement_div.innerHTML = `<strong>Move ${index + 1} (${movement.time}ms)</strong>`;
         const jointMovements_div = document.createElement('div');
         movement.jointmovements.forEach(jointMovement => {
           const joint_div = document.createElement('div');
@@ -245,9 +259,25 @@ load.addEventListener("click", function(){
 })
 
 const run = document.getElementById("run");
+const run_feedback = document.getElementById("run-feedback");
 run.addEventListener('click', function(){
-  programmer.running = true;
-  programmer.startTime = performance.now();
+  let success = true;
+  if (viewport.robot==null){
+    run_feedback.style.color = "red";
+    run_feedback.textContent = "Error - no robot found in viewport"
+    success = false;
+  }
+  if (programmer.code.length==0){
+    run_feedback.style.color = "red";
+    run_feedback.textContent = "Error - no code loaded into interpreter"
+    success=false;
+  }
+  if (success){
+    programmer.running = true;
+    programmer.startTime = performance.now();
+    run_feedback.style.color = "white";
+    run_feedback.textContent = "Started Run Successfully";
+  }
 })
 
 // Add event listener to the save button

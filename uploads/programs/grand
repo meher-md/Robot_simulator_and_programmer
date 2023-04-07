@@ -1,21 +1,87 @@
-move(1){
+move(300){
     "lbr_iiwa_joint_1" = [0, 0];
     "lbr_iiwa_joint_2" = [3.14, 2];
     "lbr_iiwa_joint_4" = [0, 0];
 }
 
-move(1){
+move(300){
     "lbr_iiwa_joint_1" = [0, 3.14];
     "lbr_iiwa_joint_4" = [0, 1.12];
 }
 
-wait(1000);
+wait(300);
 
-move(1){
+move(300){
     "lbr_iiwa_joint_1" = [3.14, 0];
     "lbr_iiwa_joint_2" = [2, 3.14];
 }
 
-move(1){
+move(300){
+    "lbr_iiwa_joint_4" = [1.12, 0];
+}
+
+move(300){
+    "lbr_iiwa_joint_1" = [0, 0];
+    "lbr_iiwa_joint_2" = [3.14, 2];
+    "lbr_iiwa_joint_4" = [0, 0];
+}
+
+move(300){
+    "lbr_iiwa_joint_1" = [0, -3.14];
+    "lbr_iiwa_joint_4" = [0, 1.12];
+}
+
+wait(300);
+
+move(300){
+    "lbr_iiwa_joint_1" = [-3.14, 0];
+    "lbr_iiwa_joint_2" = [2, 3.14];
+}
+
+move(300){
+    "lbr_iiwa_joint_4" = [1.12, 0];
+}
+
+move(300){
+    "lbr_iiwa_joint_1" = [0, 0];
+    "lbr_iiwa_joint_2" = [3.14, 2];
+    "lbr_iiwa_joint_4" = [0, 0];
+}
+
+move(300){
+    "lbr_iiwa_joint_1" = [0, 3.14];
+    "lbr_iiwa_joint_4" = [0, 1.12];
+}
+
+wait(300);
+
+move(300){
+    "lbr_iiwa_joint_1" = [3.14, 0];
+    "lbr_iiwa_joint_2" = [2, 3.14];
+}
+
+move(300){
+    "lbr_iiwa_joint_4" = [1.12, 0];
+}
+
+move(300){
+    "lbr_iiwa_joint_1" = [0, 0];
+    "lbr_iiwa_joint_2" = [3.14, 2];
+    "lbr_iiwa_joint_4" = [0, 0];
+}
+
+move(300){
+    "lbr_iiwa_joint_1" = [0, -3.14];
+    "lbr_iiwa_joint_4" = [0, 1.12];
+}
+
+wait(300);
+
+move(300){
+    "lbr_iiwa_joint_1" = [-3.14, 0];
+    "lbr_iiwa_joint_2" = [2, 3.14];
+}
+
+move(300){
     "lbr_iiwa_joint_4" = [1.12, 0];
 }

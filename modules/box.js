@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { ThreeWindow } from "./window.js";
 import { Light } from "/modules/light.js";
-import { Window } from "/modules/window.js";
 
-class Box extends Window {
+class Box extends ThreeWindow {
   // constructor to initialize the scene, camera, and renderer
   constructor(color, canvas) {
     super(canvas);

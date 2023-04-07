@@ -1,4 +1,4 @@
-import {viewport, programmer, biem} from "./main.js";
+import {viewport, programmer, biem, collisions} from "./main.js";
 import { button_constant, top_height, ws_width, ws_height } from "./layout.js";
 
 let border = button_constant * 0.25;
@@ -156,6 +156,9 @@ addMouseDownEventListener(programmer_btn, programmer);
 
 let biem_btn = document.getElementById("biem_btn"); // Get the biem button element
 addMouseDownEventListener(biem_btn, biem);
+
+let collisions_btn = document.getElementById("collisions_btn"); // Get the biem button element
+addMouseDownEventListener(collisions_btn, collisions);
 
 // opens viewport on start
 side = "left";

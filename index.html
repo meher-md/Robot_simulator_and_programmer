@@ -70,6 +70,7 @@
         <button class="programmer-button" id="save">Save</button>
         <button class="programmer-button" id="load">Load</button>
         <button class="programmer-button" id="run">Run</button>
+        <div id="run-feedback"></div>
       </div>
       <div id="interpreter"></div>
     </div>
@@ -81,6 +82,10 @@
       </div>
       <canvas class="three-canvas"></canvas>
       <div class="gui"id="biem-gui"></div>
+    </div>
+
+    <div id="collisions" class="window">
+      <canvas class="three-canvas"></canvas>
     </div>
 
     <script type="module" src="modules/light.js"></script>
@@ -115,8 +120,9 @@
 
     <canvas id="side-canvas" class="menu-bar"></canvas>
     <button class="side" id="viewport_btn"><img src="images/modules/viewport.png" draggable="false"></button>
-    <button class="side" id="programmer_btn"><img src="images/modules/programmer.png"draggable="false"></button>
     <button class="side" id="biem_btn"><img src="images/modules/biem.png"draggable="false"></button>
+    <button class="side" id="programmer_btn"><img src="images/modules/programmer.png"draggable="false"></button>
+    <button class="side" id="collisions_btn"><img src="images/modules/collisions.png"draggable="false"></button>
 
     <script src="src/layout.js" type="module"></script>
     <script src="modules/file-manager.js" type="module"></script>
