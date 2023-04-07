@@ -175,6 +175,27 @@ class Programmer extends Window {
           if (this.code[this.currentMovementIndex] instanceof Movement){
             const currentMovement = this.code[this.currentMovementIndex];
             if (this.timer >= currentMovement.time) {
+              currentMovement.jointmovements.forEach((jointMovement) => {
+                let robot_joint = viewport.robot.joints[jointMovement.jointName];
+                if (robot_joint._jointType != "fixed") {
+                  if (robot_joint.axis.x!=0){
+                    robot_joint.rotation.x = jointMovement.position_2;
+                    const xController = gui.__controllers.find(controller => controller.property === 'x' && controller.__li.textContent === jointMovement.jointName);
+                    xController.setValue(robot_joint.rotation.x);
+                  }
+                  if (robot_joint.axis.y!=0){
+                    robot_joint.rotation.y = jointMovement.position_2;
+                    const yController = gui.__controllers.find(controller => controller.property === 'y' && controller.__li.textContent === jointMovement.jointName);
+                    yController.setValue(robot_joint.rotation.y);
+                  }
+                  if (robot_joint.axis.z!=0){
+                    robot_joint.rotation.z = jointMovement.position_2;
+                    const zController = gui.__controllers.find(controller => controller.property === 'z' && controller.__li.textContent === jointMovement.jointName);
+                    zController.setValue(robot_joint.rotation.z);
+                  }
+                }
+              })
+
               this.currentMovementIndex++;
               this.updateInterpreter();
               this.timer = 0;
@@ -211,7 +232,6 @@ class Programmer extends Window {
                   }
                 }
               });
-              
             }
           } 
           if (this.code[this.currentMovementIndex] instanceof Wait){
