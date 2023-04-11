@@ -188,93 +188,110 @@ class Programmer extends Window {
     this.timer = elapsed;
   }
 
-  animate() { 
-    if (this.running){
-      const moveNext = () => {
-        if (this.currentMovementIndex < this.code.length) {
-          if (this.code[this.currentMovementIndex] instanceof Movement){
-            const currentMovement = this.code[this.currentMovementIndex];
-            if (this.timer >= currentMovement.time) {
-              currentMovement.jointmovements.forEach((jointMovement) => {
-                let robot_joint = viewport.robot.joints[jointMovement.jointName];
-                if (robot_joint._jointType != "fixed") {
-                  if (robot_joint.axis.x!=0){
-                    robot_joint.rotation.x = jointMovement.position_2;
-                    const xController = gui.__controllers.find(controller => controller.property === 'x' && controller.__li.textContent === jointMovement.jointName);
-                    xController.setValue(robot_joint.rotation.x);
-                  }
-                  if (robot_joint.axis.y!=0){
-                    robot_joint.rotation.y = jointMovement.position_2;
-                    const yController = gui.__controllers.find(controller => controller.property === 'y' && controller.__li.textContent === jointMovement.jointName);
-                    yController.setValue(robot_joint.rotation.y);
-                  }
-                  if (robot_joint.axis.z!=0){
-                    robot_joint.rotation.z = jointMovement.position_2;
-                    const zController = gui.__controllers.find(controller => controller.property === 'z' && controller.__li.textContent === jointMovement.jointName);
-                    zController.setValue(robot_joint.rotation.z);
-                  }
-                }
-              })
-
-              this.currentMovementIndex++;
-              this.updateInterpreter();
-              this.timer = 0;
-              this.startTime = performance.now();
-              moveNext(); // recursive call
-            } 
-            else {
-              // update timer
-              this.updateTimer();
-        
-              // interpolate
-              currentMovement.jointmovements.forEach((jointMovement) => {
-                const deltaPosition = jointMovement.position_2 - jointMovement.position_1;
-                const timeRatio = this.timer / currentMovement.time;
-                const interpolatedPosition = jointMovement.position_1 + (deltaPosition * timeRatio);
-                jointMovement.current_position = interpolatedPosition;
-              
-                let robot_joint = viewport.robot.joints[jointMovement.jointName];
-                if (robot_joint._jointType != "fixed") {
-                  if (robot_joint.axis.x!=0){
-                    robot_joint.rotation.x = jointMovement.current_position;
-                    const xController = gui.__controllers.find(controller => controller.property === 'x' && controller.__li.textContent === jointMovement.jointName);
-                    xController.setValue(robot_joint.rotation.x);
-                  }
-                  if (robot_joint.axis.y!=0){
-                    robot_joint.rotation.y = jointMovement.current_position;
-                    const yController = gui.__controllers.find(controller => controller.property === 'y' && controller.__li.textContent === jointMovement.jointName);
-                    yController.setValue(robot_joint.rotation.y);
-                  }
-                  if (robot_joint.axis.z!=0){
-                    robot_joint.rotation.z = jointMovement.current_position;
-                    const zController = gui.__controllers.find(controller => controller.property === 'z' && controller.__li.textContent === jointMovement.jointName);
-                    zController.setValue(robot_joint.rotation.z);
-                  }
-                }
-              });
-            }
-          } 
-          if (this.code[this.currentMovementIndex] instanceof Wait){
-            const currentWait = this.code[this.currentMovementIndex];
-            if (this.timer >= currentWait.time) {
-              this.currentMovementIndex++;
-              this.updateInterpreter();
-              this.timer = 0;
-              this.startTime = performance.now();
-              moveNext(); // recursive call
-            } else {
-              this.updateTimer();
-            }
-          }
-        } else {
-          this.running = false;
-          this.currentMovementIndex = 0;
-          this.updateInterpreter();
-        }
-      };      
-
-      moveNext();
+  animate() {
+    if (this.running) {
+      this.moveNext();
     }
+  }
+  
+  moveNext(){
+    if (this.currentMovementIndex < this.code.length) {
+      if (this.code[this.currentMovementIndex] instanceof Movement){
+        this.handleMovement();
+      } 
+      if (this.code[this.currentMovementIndex] instanceof Wait){
+        this.handleWait();
+      }
+    } 
+    else {
+      this.handleEnd();
+    }
+  }
+
+  handleMovement() {
+    const currentMovement = this.code[this.currentMovementIndex];
+
+    if (this.timer >= currentMovement.time) {
+      this.executeMovement(currentMovement.jointmovements);
+      this.currentMovementIndex++;
+      this.updateInterpreter();
+      this.timer = 0;
+      this.startTime = performance.now();
+      this.moveNext();
+    } else {
+      this.updateTimer();
+      this.interpolateMovement(currentMovement.jointmovements, this.timer, currentMovement.time);
+    }
+  }
+
+  executeMovement(jointmovements) {
+    jointmovements.forEach((jointMovement) => {
+      let robot_joint = viewport.robot.joints[jointMovement.jointName];
+      if (robot_joint._jointType != "fixed") {
+        if (robot_joint.axis.x!=0){
+          robot_joint.rotation.x = jointMovement.position_2;
+          const xController = gui.__controllers.find(controller => controller.property === 'x' && controller.__li.textContent === jointMovement.jointName);
+          xController.setValue(robot_joint.rotation.x);
+        }
+        if (robot_joint.axis.y!=0){
+          robot_joint.rotation.y = jointMovement.position_2;
+          const yController = gui.__controllers.find(controller => controller.property === 'y' && controller.__li.textContent === jointMovement.jointName);
+          yController.setValue(robot_joint.rotation.y);
+        }
+        if (robot_joint.axis.z!=0){
+          robot_joint.rotation.z = jointMovement.position_2;
+          const zController = gui.__controllers.find(controller => controller.property === 'z' && controller.__li.textContent === jointMovement.jointName);
+          zController.setValue(robot_joint.rotation.z);
+        }
+      }
+    });
+  }
+
+  interpolateMovement(jointmovements, timeElapsed, totalTime) {
+    jointmovements.forEach((jointMovement) => {
+      const deltaPosition = jointMovement.position_2 - jointMovement.position_1;
+      const timeRatio = timeElapsed / totalTime;
+      const interpolatedPosition = jointMovement.position_1 + (deltaPosition * timeRatio);
+      jointMovement.current_position = interpolatedPosition;
+  
+      let robot_joint = viewport.robot.joints[jointMovement.jointName];
+      if (robot_joint._jointType != "fixed") {
+        if (robot_joint.axis.x!=0){
+          robot_joint.rotation.x = jointMovement.current_position;
+          const xController = gui.__controllers.find(controller => controller.property === 'x' && controller.__li.textContent === jointMovement.jointName);
+          xController.setValue(robot_joint.rotation.x);
+        }
+        if (robot_joint.axis.y!=0){
+          robot_joint.rotation.y = jointMovement.current_position;
+          const yController = gui.__controllers.find(controller => controller.property === 'y' && controller.__li.textContent === jointMovement.jointName);
+          yController.setValue(robot_joint.rotation.y);
+        }
+        if (robot_joint.axis.z!=0){
+          robot_joint.rotation.z = jointMovement.current_position;
+          const zController = gui.__controllers.find(controller => controller.property === 'z' && controller.__li.textContent === jointMovement.jointName);
+          zController.setValue(robot_joint.rotation.z);
+        }
+      }
+    });
+  }
+  
+  handleWait() {
+    const currentWait = this.code[this.currentMovementIndex];
+    if (this.timer >= currentWait.time) {
+      this.currentMovementIndex++;
+      this.updateInterpreter();
+      this.timer = 0;
+      this.startTime = performance.now();
+      this.moveNext(); // recursive call
+    } else {
+      this.updateTimer();
+    }
+  }
+  
+  handleEnd(){
+    this.running = false;
+    this.currentMovementIndex = 0;
+    this.updateInterpreter();
   }
 }
 
