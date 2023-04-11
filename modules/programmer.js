@@ -1,4 +1,5 @@
 import {Window} from "./window.js"
+
 import { button_constant } from "../src/layout.js";
 import { programmer, viewport } from "../src/main.js";
 import {gui} from "./viewport.js"
@@ -52,16 +53,16 @@ class Programmer extends Window {
   parse() {
     const text_area = document.getElementById('text-area');
     const inputText = text_area.value;
-  
+
     const waitRegex = /wait\s*\(\s*(\d+)\s*\);/ig;
     const moveRegex = /move\s*\(\s*(\d+)\s*\)\s*\{([\s\S]+?)\}/igm;
     const jointRegex = /"([\w_]+)"\s*=\s*\[([-.\d]+),?\s*([-.\d]+)?\];?/g;
-  
+
     this.code = [];
     const latestJointPositions = {};
 
     const matches = [];
-  
+
     let match;
     while ((match = moveRegex.exec(inputText)) !== null) {
       matches.push({ type: 'move', match });
@@ -82,7 +83,7 @@ class Programmer extends Window {
       if (type === 'move') {
         const time = parseInt(match[1]);
         const jointMovements = [];
-    
+
         let jointMatch;
         while ((jointMatch = jointRegex.exec(match[2])) !== null) {
           const jointName = jointMatch[1];
@@ -100,12 +101,12 @@ class Programmer extends Window {
             // If the joint movement has only one position, set position1 to the previous position2
             position1 = latestJointPositions[jointName].position_2;
           }
-    
+
           const jointMovement = new JointMovement(jointName, position1, position2);
           jointMovements.push(jointMovement);
           latestJointPositions[jointName] = jointMovement;
         }
-    
+
         const movement = new Movement(time, jointMovements);
         this.code.push(movement);
       }
@@ -274,7 +275,7 @@ class Programmer extends Window {
 
       moveNext();
     }
-  }  
+  }
 }
 
 class Wait {
