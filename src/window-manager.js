@@ -162,6 +162,6 @@ addMouseDownEventListener(collisions_btn, collisions);
 
 // opens viewport on start
 side = "left";
-current_window=programmer;
+current_window=viewport;
 current_window.show();
 endMouseorTouch();
