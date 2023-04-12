@@ -189,40 +189,48 @@ class Programmer extends Window {
   }
 
   animate() {
+    // Check if animation is running
     if (this.running) {
+      // If it is, move to the next movement or wait command
       this.moveNext();
     }
   }
   
   moveNext(){
+    // Check if there are more commands to execute
     if (this.currentMovementIndex < this.code.length) {
+      // Check if the current command is a movement command
       if (this.code[this.currentMovementIndex] instanceof Movement){
+        // If it is, handle the movement command
         this.handleMovement();
       } 
+      // Check if the current command is a wait command
       if (this.code[this.currentMovementIndex] instanceof Wait){
+        // If it is, handle the wait command
         this.handleWait();
       }
     } 
     else {
+      // If there are no more commands, handle the end of the animation
       this.handleEnd();
     }
   }
 
   handleMovement() {
     const currentMovement = this.code[this.currentMovementIndex];
-
-    if (this.timer >= currentMovement.time) {
-      this.executeMovement(currentMovement.jointmovements);
-      this.currentMovementIndex++;
-      this.updateInterpreter();
-      this.timer = 0;
-      this.startTime = performance.now();
-      this.moveNext();
+  
+    if (this.timer >= currentMovement.time) { // if the timer has elapsed the required time for the current movement
+      this.executeMovement(currentMovement.jointmovements); // execute the movement
+      this.currentMovementIndex++; // move to the next movement in the code
+      this.updateInterpreter(); // update the UI to reflect the current movement
+      this.timer = 0; // reset the timer to 0
+      this.startTime = performance.now(); // reset the start time to the current time
+      this.moveNext(); // recursively call moveNext() to move to the next movement or wait in the code
     } else {
-      this.updateTimer();
-      this.interpolateMovement(currentMovement.jointmovements, this.timer, currentMovement.time);
+      this.updateTimer(); // update the timer to reflect the elapsed time
+      this.interpolateMovement(currentMovement.jointmovements, this.timer, currentMovement.time); // interpolate the joint movements based on the elapsed time and the total movement time
     }
-  }
+  }  
 
   executeMovement(jointmovements) {
     jointmovements.forEach((jointMovement) => {
@@ -247,33 +255,35 @@ class Programmer extends Window {
     });
   }
 
-  interpolateMovement(jointmovements, timeElapsed, totalTime) {
-    jointmovements.forEach((jointMovement) => {
-      const deltaPosition = jointMovement.position_2 - jointMovement.position_1;
-      const timeRatio = timeElapsed / totalTime;
-      const interpolatedPosition = jointMovement.position_1 + (deltaPosition * timeRatio);
-      jointMovement.current_position = interpolatedPosition;
-  
-      let robot_joint = viewport.robot.joints[jointMovement.jointName];
-      if (robot_joint._jointType != "fixed") {
-        if (robot_joint.axis.x!=0){
-          robot_joint.rotation.x = jointMovement.current_position;
-          const xController = gui.__controllers.find(controller => controller.property === 'x' && controller.__li.textContent === jointMovement.jointName);
-          xController.setValue(robot_joint.rotation.x);
-        }
-        if (robot_joint.axis.y!=0){
-          robot_joint.rotation.y = jointMovement.current_position;
-          const yController = gui.__controllers.find(controller => controller.property === 'y' && controller.__li.textContent === jointMovement.jointName);
-          yController.setValue(robot_joint.rotation.y);
-        }
-        if (robot_joint.axis.z!=0){
-          robot_joint.rotation.z = jointMovement.current_position;
-          const zController = gui.__controllers.find(controller => controller.property === 'z' && controller.__li.textContent === jointMovement.jointName);
-          zController.setValue(robot_joint.rotation.z);
-        }
+interpolateMovement(jointmovements, timeElapsed, totalTime) {
+  // Iterate over each joint movement object
+  jointmovements.forEach((jointMovement) => {
+    const deltaPosition = jointMovement.position_2 - jointMovement.position_1; // Calculate the delta (difference) between the two positions for this joint movement
+    const timeRatio = timeElapsed / totalTime; // Calculate the ratio of time elapsed to total time for this joint movement
+    const interpolatedPosition = jointMovement.position_1 + (deltaPosition * timeRatio); // Calculate the interpolated position for this joint movement
+    jointMovement.current_position = interpolatedPosition; // Set the current position of this joint movement to the interpolated position
+    
+    // Find the corresponding joint in the robot model and update its rotation based on the interpolated position
+    let robot_joint = viewport.robot.joints[jointMovement.jointName];
+    if (robot_joint._jointType != "fixed") {
+      if (robot_joint.axis.x!=0){
+        robot_joint.rotation.x = jointMovement.current_position;
+        const xController = gui.__controllers.find(controller => controller.property === 'x' && controller.__li.textContent === jointMovement.jointName);
+        xController.setValue(robot_joint.rotation.x);
       }
-    });
-  }
+      if (robot_joint.axis.y!=0){
+        robot_joint.rotation.y = jointMovement.current_position;
+        const yController = gui.__controllers.find(controller => controller.property === 'y' && controller.__li.textContent === jointMovement.jointName);
+        yController.setValue(robot_joint.rotation.y);
+      }
+      if (robot_joint.axis.z!=0){
+        robot_joint.rotation.z = jointMovement.current_position;
+        const zController = gui.__controllers.find(controller => controller.property === 'z' && controller.__li.textContent === jointMovement.jointName);
+        zController.setValue(robot_joint.rotation.z);
+      }
+    }
+  });
+}  
   
   handleWait() {
     const currentWait = this.code[this.currentMovementIndex];
@@ -347,18 +357,12 @@ run.addEventListener('click', function(){
 
 // Add event listener to the save button
 document.getElementById("save").addEventListener("click", function() {
-  // Get the filename from the input field
-  var filename = document.getElementById("filename-input").value;
-  // Get the contents of the text area
-  var content = document.getElementById("text-area").value;
-  // Create a new XMLHttpRequest object
-  var xhr = new XMLHttpRequest();
-  // Set up the request
-  xhr.open("POST", "../php/upload_program.php", true);
-  // Set the content type
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  // Set the data to be sent
-  xhr.send("filename=" + encodeURIComponent(filename) + "&content=" + encodeURIComponent(content));
+  var filename = document.getElementById("filename-input").value; // Get the filename from the input field
+  var content = document.getElementById("text-area").value; // Get the contents of the text area
+  var xhr = new XMLHttpRequest(); // Create a new XMLHttpRequest object
+  xhr.open("POST", "../php/upload_program.php", true); // Set up the request
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // Set the content type
+  xhr.send("filename=" + encodeURIComponent(filename) + "&content=" + encodeURIComponent(content)); // Set the data to be sent
 
   // update file manager
   programmer.updateProgrammerDirectoryListing();
