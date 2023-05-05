@@ -333,26 +333,29 @@ load.addEventListener("click", function(){
   programmer.parse();
 })
 
-const run = document.getElementById("run");
-const run_feedback = document.getElementById("run-feedback");
-run.addEventListener('click', function(){
-  let success = true;
-  if (viewport.robot==null){
-    run_feedback.style.color = "red";
-    run_feedback.textContent = "Error - no robot found in viewport"
-    success = false;
-  }
-  if (programmer.code.length==0){
-    run_feedback.style.color = "red";
-    run_feedback.textContent = "Error - no code loaded into interpreter"
-    success=false;
-  }
-  if (success){
-    programmer.running = true;
-    programmer.startTime = performance.now();
-    run_feedback.style.color = "white";
-    run_feedback.textContent = "Started Run Successfully";
-  }
+const run = document.querySelectorAll("#run");
+run.forEach((run_btn) => {
+  run_btn.addEventListener('click', function(){
+    let success = true;
+    const parentDiv = run_btn.parentNode; // Get the parent div of the run button
+    const run_feedback = parentDiv.querySelector('.run-feedback'); // Find the run-feedback element within the parent div
+    if (viewport.robot==null){
+      run_feedback.style.color = "red";
+      run_feedback.textContent = "Error - no robot found in viewport"
+      success = false;
+    }
+    if (programmer.code.length==0){
+      run_feedback.style.color = "red";
+      run_feedback.textContent = "Error - no code loaded into interpreter"
+      success=false;
+    }
+    if (success){
+      programmer.running = true;
+      programmer.startTime = performance.now();
+      run_feedback.style.color = "white";
+      run_feedback.textContent = "Started Run Successfully";
+    }
+  })
 })
 
 // Add event listener to the save button

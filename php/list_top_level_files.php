@@ -15,7 +15,7 @@ function listTopLevelFiles($dir) {
       } else {
         // Check if the file has a .urdf extension
         $extension = pathinfo($file, PATHINFO_EXTENSION);
-        if ($extension == 'urdf') {
+        if ($extension == 'urdf' || $extension == 'URDF') {
           $output .= '<button class="file">' . $file . '</button><br>';
         }
       }

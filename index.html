@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="styles/box-styles.css">
   <link rel="stylesheet" href="styles/biem.css">
   <link rel="stylesheet" href="styles/programmer.css">
+  <link rel="stylesheet" href="styles/viewport.css">
   <link rel="icon" type="image/png" href="images/favicon.png">
 	<body>
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
@@ -44,7 +45,9 @@
         <br><br>
         <input type="button" value="Upload Files" id="upload">
       </form>
-      <h4>Uploaded Files:</h4>
+      <h4>Upload Result:</h4>
+      <div id="upload-error"></div>
+      <h3>Uploaded Files:</h3>
       <button class="refresh" id="importRefreshButton">↻</button>
       <div id="importListingContainer" class="directory-listing"></div>
     </div>
@@ -58,6 +61,10 @@
     </div>
 
     <div id="viewport" class="window">
+      <div id="viewport-interface">
+        <div class="run-feedback" style="padding-top: 10px; padding-left: 10px;"></div>
+        <button id="run" class="viewport-button">Run</button>
+      </div>
       <canvas class="three-canvas"></canvas>
       <div class="gui"id="viewport-gui"></div>
     </div>
@@ -74,7 +81,7 @@
         <button class="programmer-button" id="save">Save</button>
         <button class="programmer-button" id="load">Load</button>
         <button class="programmer-button" id="run">Run</button>
-        <div id="run-feedback"></div>
+        <div class="run-feedback"></div>
       </div>
       <div id="interpreter"></div>
     </div>

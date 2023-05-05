@@ -39,7 +39,7 @@
   display: inline-block;
   position: absolute;
 }
-#run-feedback {
+.run-feedback {
   color: white;
   font-style: italic;
   font-family: monospace;

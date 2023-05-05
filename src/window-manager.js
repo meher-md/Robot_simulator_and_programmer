@@ -161,7 +161,7 @@ let collisions_btn = document.getElementById("collisions_btn"); // Get the biem 
 addMouseDownEventListener(collisions_btn, collisions);
 
 // opens viewport on start
-side = "left";
-current_window=viewport;
-current_window.show();
-endMouseorTouch();
+// side = "left";
+// current_window=viewport;
+// current_window.show();
+// endMouseorTouch();
