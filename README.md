@@ -2,7 +2,7 @@
 
 Robot Arm Simulator is a web-based application for simulating robotic arms. It allows users to import and view 3D models of robotic arms in the URDF file format and interact with them using a 3D viewport. The simulator also includes a programming interface and a Basic Integrated Environment Modeller (BIEM).
 
-Here is a basic [website](https://aj-floater.github.io/) however, it doesn't include any server side programming. This means that the only functional part of it is the BIEM.
+Here is a hosted [website](https://aj-floater.github.io/) to demonstrate the program. However it doesn't include any server side programming, which means that the only functional part of it is the BIEM.
 
 ## Installation
 
