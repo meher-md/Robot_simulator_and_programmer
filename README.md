@@ -6,17 +6,7 @@ Here is a hosted [website](https://aj-floater.github.io/) to demonstrate the pro
 
 ## Installation
 
-There is no need to install npm to host the program locally, but you do need to use a hosting service that allows the running of PHP. 
-
-### Hosting Services
-
-Some hosting services that allow running of PHP include:
-
-- Heroku
-- AWS
-- Google Cloud
-- DigitalOcean
-- Bluehost
+To run the program, you need to use a service that allows the running of PHP, else some of the server-side functionality won't work. 
 
 ### Getting Started
 
