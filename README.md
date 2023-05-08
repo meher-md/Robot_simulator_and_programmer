@@ -1,6 +1,6 @@
 # Robot Arm Simulator
 
-Robot Arm Simulator is a web-based application for simulating robotic arms. It allows users to import and view 3D models of robotic arms in the URDF file format and interact with them using a 3D viewport. The simulator also includes a programming interface and a Built-in Extrusion Mesh Editor (BIEM) tool.
+Robot Arm Simulator is a web-based application for simulating robotic arms. It allows users to import and view 3D models of robotic arms in the URDF file format and interact with them using a 3D viewport. The simulator also includes a programming interface and a Basic Integrated Environment Modeller (BIEM).
 
 ## Installation
 
