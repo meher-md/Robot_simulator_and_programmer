@@ -2,30 +2,38 @@
 
 Robot Arm Simulator is a web-based application for simulating robotic arms. It allows users to import and view 3D models of robotic arms in the URDF file format and interact with them using a 3D viewport. The simulator also includes a programming interface and a Built-in Extrusion Mesh Editor (BIEM) tool.
 
-## Getting Started
+## Installation
 
-### Prerequisites
+There is no need to install npm to host the program locally, but you do need to use a hosting service that allows the running of PHP. 
 
-To run this application locally, you will need to have the following installed on your machine:
+### Hosting Services
 
-- Node.js
-- npm
+Some hosting services that allow running of PHP include:
 
-### Installation
+- Heroku
+- AWS
+- Google Cloud
+- DigitalOcean
+- Bluehost
 
-1. Clone the repository:
+### Getting Started
+
+To get started with the Robot Arm Simulator, you can use the PHP development server to host the program locally. To do this, follow these steps:
+
+1. Download the code from the GitHub repository:
 
    ```
    git clone https://github.com/example/robot-arm-simulator-2.git
    ```
 
-2. Start the server:
+2. Open a terminal window and navigate to the directory where you downloaded the code.
+3. Run the following command to start the PHP development server:
 
    ```
    php -S localhost:3000
    ```
 
-3. Open your web browser and navigate to `http://localhost:3000`.
+4. Open a web browser and go to `http://localhost:3000` to access the program.
 
 ## Usage
 
