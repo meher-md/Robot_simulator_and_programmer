@@ -13,6 +13,10 @@ To run the program, you need to use a service that allows the running of PHP, el
 
 To get started with the Robot Arm Simulator, you can use the PHP development server to host the program locally. To do this, follow these steps:
 
+0. Installation requirements
+    ```
+    sudo apt install php8.1-cli
+    ```
 1. Download the code from the GitHub repository:
 
    ```

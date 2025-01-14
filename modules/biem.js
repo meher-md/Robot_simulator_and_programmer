@@ -1,9 +1,10 @@
 import * as THREE from "three";
 import { Vector3 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { biem, viewport } from "../src/main.js";
+import { viewport } from "../src/main.js";
 import {ThreeWindow} from "./window.js"
 import * as dat from "dat.gui";
+
 
 let biem_gui = new dat.GUI({autoPlace: false});
 document.querySelector('#biem-gui').appendChild(biem_gui.domElement);
@@ -17,6 +18,15 @@ var palette = {
 biem_gui.addColor(palette, "color");
 
 function getIntersectionsFromMouse(event, intersectObject) {
+  if (!intersectObject) {
+    console.error("Invalid intersectObject passed to getIntersectionsFromMouse.");
+    return [];
+  }
+  if (!biem.canvas) {
+    console.error("Canvas is not initialized.");
+    return [];
+  }
+
   const canvasRect = biem.canvas.getBoundingClientRect();
   const mouseCoords = {
     x: ((event.clientX - canvasRect.left) / canvasRect.width) * 2 - 1,
@@ -85,8 +95,7 @@ function handlePlaneIntersections(planeIntersections) {
 
 function handleMouseMove(event) {
   // Check if a rectangle is currently being extruded
-  if (biem.helper.visible) {
-    // If so, check for intersection with the extrusion plane
+  if (biem.helper?.visible) {
     const intersections = getIntersectionsFromMouse(event, biem.plane);
     handlePlaneIntersections(intersections);
   }
@@ -94,44 +103,46 @@ function handleMouseMove(event) {
   else if (!isMouseDown) {
     selected_plane = null;
     position = 0;
-    // Iterate over each rectangle to check for intersection with the mouse
-    biem.planes.forEach(function (rectangle, i) {
-      const intersections = getIntersectionsFromMouse(event, rectangle);
 
-      if (intersections.length > 0) {
-        // If an intersection is found, set the selected_plane and position variables
-        selected_plane = rectangle;
-        position = i;
+    // Check if rectangles (biem.planes) exist and are non-empty before iterating
+    if (Array.isArray(biem.planes) && biem.planes.length > 0) {
+      biem.planes.forEach(function (rectangle, i) {
+        const intersections = getIntersectionsFromMouse(event, rectangle);
 
+        if (intersections.length > 0) {
+          // If an intersection is found, set the selected_plane and position variables
+          selected_plane = rectangle;
+          position = i;
+
+          if (selected_plane.originalColor === undefined) {
+            selected_plane.originalColor = new THREE.Color(selected_plane.material.color.getHex());
+          }
+        } else {
+          // Reset the color of the rectangle if no intersection
+          rectangle.material.color.copy(rectangle.originalColor);
+        }
+      });
+
+      if (selected_plane) {
+        // Highlight selected rectangle and disable controls
         if (selected_plane.originalColor === undefined) {
           selected_plane.originalColor = new THREE.Color(selected_plane.material.color.getHex());
         }
+        selected_plane.material.color.set(0xffffff);
+        biem.controls.enabled = false;
+
+        // Add event listener for mouse down to start extrusion
+        document.addEventListener('mousedown', handleMouseDownOnPlane);
       } else {
-        // If no intersection, reset the color of the rectangle
-        // console.log(rectangle.originalColor);
-        rectangle.material.color.copy(rectangle.originalColor);
+        // Reset controls and remove event listeners if no rectangle is selected
+        biem.controls.enabled = true;
+        document.removeEventListener('mousedown', handleMouseDownOnPlane);
+        document.removeEventListener('mousemove', handleMouseMoveDuringExtrusion);
       }
-    });
-    if (selected_plane != null) {
-      // If a rectangle is selected, highlight it and disable controls
-      if (selected_plane.originalColor === undefined) {
-        selected_plane.originalColor = new THREE.Color(selected_plane.material.color.getHex());
-      }
-      // console.log(selected_plane.originalColor);
-      selected_plane.material.color.set(0xffffff);
-      biem.controls.enabled = false;
-
-      // Add event listener for mouse down to start extrusion
-      document.addEventListener('mousedown', handleMouseDownOnPlane);
-    } else {
-      // If no rectangle is selected, reset controls and remove event listeners
-      biem.controls.enabled = true;
-
-      document.removeEventListener('mousedown', handleMouseDownOnPlane);
-      document.removeEventListener('mousemove', handleMouseMoveDuringExtrusion);
     }
   }
 }
+
 
 // Extrusion
 
@@ -278,9 +289,14 @@ function onMouseUpAfterMouseDown(event) {
 }
 
 class BIEM extends ThreeWindow {
-  constructor(window) {
+  constructor(window) {   
     super(window);
 
+    // Initialize canvas
+    this.canvas = this.window.querySelector("canvas.three-canvas");
+    if (!this.canvas) {
+      console.error("Canvas not found in BIEM window.");
+    }
     // Add lights and helpers to the scene
     this.addLights();
     // this.addAxesHelper();
@@ -301,6 +317,20 @@ class BIEM extends ThreeWindow {
 
     // Add event listeners
     this.addEventListeners();
+
+    // -------------------------------POINT CLOUD CODE
+        // Scene setup
+    this.pointCloudGroup = new THREE.Group();
+    this.pointCloudGroup.name = "PointClouds";
+    this.scene.add(this.pointCloudGroup);
+
+    this.pointClouds = [];
+    this.helper = new THREE.GridHelper(1, 8, 0x6ac36d, 0x333333);
+    this.scene.add(this.helper);
+    this.addPointCloudGuiControls();
+    this.addPointCloudEventListeners();
+    this.loadPCDPointCloud = this.loadPCDPointCloud.bind(this);
+
   }
 
   addLights() {
@@ -410,6 +440,111 @@ class BIEM extends ThreeWindow {
     document.addEventListener('mousemove', handleMouseMove );
   }
 
+  // ------------------------------------------------------------------   POINT CLOUD METHODS
+  loadPCDPointCloud(data, name = "PointCloud") {
+    if (Array.isArray(data)) {
+      // **Handling JSON Data**
+      const geometry = new THREE.BufferGeometry();
+      const vertices = [];
+      const colors = [];
+  
+      data.forEach(point => {
+        // Scale the points by 0.001
+        vertices.push(point.x * 0.001, point.y * 0.001, point.z * 0.001);
+        if (point.color) {
+          colors.push(point.color.r, point.color.g, point.color.b);
+        } else {
+          colors.push(1, 1, 1);
+        }
+      });
+  
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  
+      const material = new THREE.PointsMaterial({
+        size: 0.05,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8
+      });
+  
+      const pointCloud = new THREE.Points(geometry, material);
+      pointCloud.name = name;
+      this.pointCloudGroup.add(pointCloud);
+      this.pointClouds.push(pointCloud);
+    } else if (data instanceof THREE.Points) {
+      // **Handling PCDLoader's PointCloud Object**
+      data.name = name;
+      data.scale.set(0.001, 0.001, 0.001); // Scale the entire point cloud
+      this.pointCloudGroup.add(data);
+      this.pointClouds.push(data);
+    } else {
+      console.error("Unsupported data type for loadPCDPointCloud:", data);
+      return;
+    }
+  
+    this.updatePointCloudGui();
+  }
+  
+
+  addPointCloudGuiControls() {
+    this.pointCloudFolder = biem_gui.addFolder('Point Clouds');
+    this.pointCloudFolder.open();
+
+    this.pointCloudFolder.add(this, 'togglePointCloudVisibility').name('Toggle All Visibility');
+  }
+
+  updatePointCloudGui() {
+    const controllers = this.pointCloudFolder.__controllers.slice();
+    controllers.forEach(controller => this.pointCloudFolder.remove(controller));
+
+    this.pointClouds.forEach(pc => {
+      const folder = this.pointCloudFolder.addFolder(pc.name);
+      folder.add(pc, 'visible').name('Visible');
+      folder.add({ delete: () => this.deletePointCloud(pc) }, 'delete').name('Delete');
+    });
+  }
+
+  deletePointCloud(pointCloud) {
+    this.pointCloudGroup.remove(pointCloud);
+    const index = this.pointClouds.indexOf(pointCloud);
+    if (index > -1) this.pointClouds.splice(index, 1);
+    this.updatePointCloudGui();
+  }
+
+  togglePointCloudVisibility() {
+    const visibility = !this.pointClouds[0]?.visible;
+    this.pointClouds.forEach(pc => pc.visible = visibility);
+  }
+
+  addPointCloudEventListeners() {
+    document.addEventListener('click', this.onPointCloudClick.bind(this));
+  }
+
+  onPointCloudClick(event) {
+    if (!this.pointClouds.length) {
+      console.warn("No point clouds available for intersection.");
+      return;
+  }
+    const intersects = getIntersectionsFromMouse(event, this.pointClouds);
+    if (intersects.length) {
+        const intersected = intersects[0].object;
+        this.previewPointCloud(intersected);
+    } else {
+        this.hidePointCloudPreview();
+    }
+}
+
+  previewPointCloud(pointCloud) {
+    if (this.currentPreview) this.currentPreview.material.size = 0.05;
+    pointCloud.material.size = 0.1;
+    this.currentPreview = pointCloud;
+  }
+
+  hidePointCloudPreview() {
+    if (this.currentPreview) this.currentPreview.material.size = 0.05;
+    this.currentPreview = null;
+  }
   animate(){
     if (this.rendering) {
       this.controls.update(); // Update the controls

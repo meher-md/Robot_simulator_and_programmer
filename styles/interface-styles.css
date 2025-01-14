@@ -90,3 +90,25 @@ html { overflow: hidden; }
   top: 0px;
   right: 0px;
 }
+
+
+/* Style for point cloud upload button */
+.pointcloud-upload {
+  position: absolute;
+  top: 50px; /* Position it below the top menu */
+  right: 10px; /* Align to the right edge */
+  z-index: 100; /* Ensure it appears above other elements */
+  padding: 10px 15px; /* Consistent padding for a button-like appearance */
+  background-color: #414141; /* Match the interface's dark theme */
+  color: white; /* Make text visible on a dark background */
+  border: none; /* Remove default button borders */
+  border-radius: 5px; /* Rounded edges for a modern look */
+  font-family: monospace; /* Match other elements in the interface */
+  cursor: pointer; /* Indicate interactivity */
+}
+
+/* Hover effect for the upload button */
+.pointcloud-upload:hover {
+  background-color: #437a45; /* Provide feedback on hover */
+}
+

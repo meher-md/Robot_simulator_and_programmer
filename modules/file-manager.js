@@ -1,4 +1,7 @@
-import {viewport} from "../src/main.js"
+import { PCDLoader } from "three/addons/loaders/PCDLoader.js";
+import {viewport,biem} from "../src/main.js"
+
+
 
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
@@ -91,13 +94,47 @@ function updateRobotDirectoryListing() {
     xhr.send();
   });
 }
+
+
 function updateAllDirectoryListings(){
   updateImportDirectoryListing();
   updateRobotDirectoryListing();
 }
 
+
+
 // calls all updates for directory listings
 updateAllDirectoryListings();
+
+function uploadPointCloud(file) {
+  const reader = new FileReader();
+  const extension = file.name.split('.').pop().toLowerCase();
+
+  if (extension === "json") {
+    reader.onload = (event) => {
+      const content = event.target.result;
+      const data = JSON.parse(content); // Assuming JSON structure
+      biem.loadPCDPointCloud(data, file.name.split('.')[0]);
+    };
+    reader.readAsText(file);
+  } else if (extension === "pcd") {
+    const loader = new PCDLoader();
+    const url = URL.createObjectURL(file); // Create a temporary URL for the file
+    loader.load(url, (pointCloud) => {
+      biem.loadPCDPointCloud(pointCloud, file.name.split('.')[0]);
+    });
+  } else {
+    alert("Unsupported file format. Please upload a .json or .pcd file.");
+  }
+}
+
+const pointCloudInput = document.getElementById("pointcloud-upload");
+if (pointCloudInput) {
+    pointCloudInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) uploadPointCloud(file);
+    });
+}
 
 
 // add all button click events
